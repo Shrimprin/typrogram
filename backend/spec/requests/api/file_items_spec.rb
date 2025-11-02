@@ -220,7 +220,7 @@ RSpec.describe 'Api::FileItems', type: :request do
                     elapsed_seconds: 330,
                     total_correct_type_count: 50,
                     total_typo_count: 10,
-                    typos_attributes: [
+                    typos: [
                       { row: 1, column: 1, character: 'a' },
                       { row: 2, column: 2, character: 'b' }
                     ]
@@ -284,7 +284,7 @@ RSpec.describe 'Api::FileItems', type: :request do
                     elapsed_seconds: 330,
                     total_correct_type_count: 50,
                     total_typo_count: 10,
-                    typos_attributes: [
+                    typos: [
                       { row: 1, column: 1, character: 'a' },
                       { row: 2, column: 2, character: 'b' }
                     ]

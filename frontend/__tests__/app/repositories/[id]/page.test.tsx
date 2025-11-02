@@ -444,7 +444,7 @@ describe('RepositoryDetailPage', () => {
               elapsedSeconds: 0,
               totalCorrectTypeCount: 24,
               totalTypoCount: 5,
-              typosAttributes: [
+              typos: [
                 {
                   row: 0,
                   column: 20,

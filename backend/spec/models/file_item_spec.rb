@@ -12,7 +12,7 @@ RSpec.describe FileItem, type: :model do
       column: untyped_file_item.content.lines.first.length,
       elapsed_seconds: 0,
       total_typo_count: 0,
-      typos_attributes: [
+      typos: [
         {
           row: 1,
           column: 1,
