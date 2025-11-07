@@ -80,25 +80,26 @@ class FileItem < ApplicationRecord
   def save_typing_progress?(params)
     return false if params[:typing_progress].nil?
 
-    if typing_progress.present?
-      # typing_progress.destroyだと、typos1つ１つに対してdestroyが呼ばれて処理に時間がかかるため、
-      # typosに対してdelete_allして一括で削除する
-      Typo.where(typing_progress_id: typing_progress.id).delete_all
-      typing_progress.delete
+    typing_progress_params = params[:typing_progress].except(:typos)
+    typos_params = params[:typing_progress][:typos]
+
+    target_typing_progress = typing_progress || build_typing_progress(typing_progress_params)
+
+    is_saved = if typing_progress.present?
+                 target_typing_progress.update_with_typos(typing_progress_params, typos_params)
+               else
+                 target_typing_progress.save_with_typos(typos_params)
+               end
+
+    return true if is_saved
+
+    add_typing_progress_errors(target_typing_progress)
+    false
+  end
+
+  def add_typing_progress_errors(typing_progress_instance)
+    typing_progress_instance.errors.each do |error|
+      errors.add("typing_progress.#{error.attribute}", error.message)
     end
-    new_typing_progress_params = params[:typing_progress].except(:typos_attributes)
-    new_typing_progress = build_typing_progress(new_typing_progress_params)
-
-    unless new_typing_progress.save
-      new_typing_progress.errors.each do |error|
-        errors.add("typing_progress.#{error.attribute}", error.message)
-      end
-      return false
-    end
-
-    typos_params = params[:typing_progress][:typos_attributes]
-    new_typing_progress.create_typos(typos_params) if typos_params.present?
-
-    true
   end
 end
