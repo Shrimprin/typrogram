@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::UsersController, type: :request do
+RSpec.describe API::UsersController, type: :request do
   let(:user) { create(:user) }
   let!(:repository) { create(:repository, :with_extensions, user:) }
   let!(:file_item) { create(:file_item, :with_typing_progress_and_typos, repository:) }

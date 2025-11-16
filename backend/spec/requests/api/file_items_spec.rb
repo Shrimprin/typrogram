@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::FileItems', type: :request do
+RSpec.describe 'API::FileItems', type: :request do
   include_context 'with authenticated user'
 
   let!(:repository) { create(:repository, :with_file_items, user: user) }

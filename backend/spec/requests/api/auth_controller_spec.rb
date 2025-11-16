@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Api::Auth', type: :request do
+RSpec.describe 'API::Auth', type: :request do
   describe 'POST /api/auth/callback/github' do
     let(:valid_params) { { auth: { github_id: '12345', name: 'テストユーザー' } } }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   class RepositoriesController < ApplicationController
     before_action :set_repository, only: %i[show destroy]
     after_action { response.headers.merge!(@pagy.headers_hash) if @pagy }
