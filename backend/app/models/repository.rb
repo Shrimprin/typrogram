@@ -64,9 +64,13 @@ class Repository < ApplicationRecord
 
   def create_file_items_recursively(nodes, parent_file_item = nil)
     new_file_items = build_file_items(nodes, parent_file_item)
-    import_result = FileItem.import(new_file_items, batch_size: BATCH_SIZE, timestamps: true)
+    result = FileItem.import(new_file_items, batch_size: BATCH_SIZE, timestamps: true)
 
-    return false if handle_import_failures?(import_result)
+    failed_file_items = result.failed_instances
+    if failed_file_items.any?
+      add_file_item_errors(failed_file_items)
+      return nil
+    end
 
     nodes.select { |node| node.type == 'tree' }.each do |node|
       parent_item = new_file_items.find { |item| item.path == node.path }
@@ -74,16 +78,12 @@ class Repository < ApplicationRecord
     end
   end
 
-  def handle_import_failures?(import_result)
-    return false unless import_result.failed_instances.any?
-
-    import_result.failed_instances.each do |failed_item|
-      failed_item.errors.each do |error|
+  def add_file_item_errors(failed_file_items)
+    failed_file_items.each do |failed_file_item|
+      failed_file_item.errors.each do |error|
         errors.add("file_item.#{error.attribute}", error.message)
       end
     end
-
-    true
   end
 
   def build_file_items(nodes, parent_file_item)

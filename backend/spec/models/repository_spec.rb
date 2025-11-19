@@ -300,8 +300,8 @@ RSpec.describe Repository, type: :model do
         ]
       end
 
-      it 'returns false' do
-        expect(repository.send(:create_file_items_recursively, file_tree)).to be false
+      it 'returns nil' do
+        expect(repository.send(:create_file_items_recursively, file_tree)).to be_nil
       end
 
       it 'does not create file_items' do
