@@ -22,7 +22,7 @@ export default function Header({ title = '', moreComponent, backHref }: HeaderPr
           hover:opacity-80
         `}
       >
-        <Image src="/logo-icon.svg" alt="Typing Repo Logo" width={40} height={40} />
+        <Image src="/logo-icon.svg" alt="Typrogram Logo" width={40} height={40} />
       </Link>
       <div className="mx-2 flex-shrink-0">
         {backHref ? (

@@ -7,16 +7,16 @@ import { Toaster } from '@/components/ui/sonner';
 import AuthProvider from '@/providers/Auth';
 import './globals.css';
 
-const TITLE = 'Typing Repo';
+const TITLE = 'Typrogram';
 const DESCRIPTION =
   'Free typing game for programmers. You can import any GitHub repository and practice typing through real code.';
-const BASE_URL = 'https://www.typingrepo.com';
+const BASE_URL = 'https://www.Typrogram.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
     default: `${TITLE} | Practice Typing through Real Code`,
-    template: '%s | Typing Repo',
+    template: '%s | Typrogram',
   },
   description: DESCRIPTION,
   openGraph: {
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/ogp.png',
-        alt: 'Typing Repo',
+        alt: 'Typrogram',
       },
     ],
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/ogp.png',
-        alt: 'Typing Repo',
+        alt: 'Typrogram',
       },
     ],
   },

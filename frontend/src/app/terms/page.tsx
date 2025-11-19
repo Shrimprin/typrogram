@@ -4,7 +4,7 @@ import PageLayout from '@/components/common/PageLayout';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'This page describes the terms of service for Typing Repo.',
+  description: 'This page describes the terms of service for Typrogram.',
 };
 
 export default function TermsOfService() {
@@ -24,8 +24,8 @@ export default function TermsOfService() {
             `}
           >
             <p className="text-foreground">
-              Thank you very much for using Typing Repo (hereinafter, &quot;the Service&quot;). Users are kindly
-              requested to follow the Terms of Use when using the Service.
+              Thank you very much for using Typrogram (hereinafter, &quot;the Service&quot;). Users are kindly requested
+              to follow the Terms of Use when using the Service.
             </p>
 
             <section className="mt-8">
