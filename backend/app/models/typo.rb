@@ -3,8 +3,7 @@
 class Typo < ApplicationRecord
   belongs_to :typing_progress
 
-  validates :row, presence: true
-  validates :column, presence: true
+  validates :row, :column, presence: true
   validate :character_not_nil_or_empty_string
 
   private
