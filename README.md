@@ -18,4 +18,4 @@ $ hoge
 ```
 
 ## License
-"Typing on GitHub" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
+"Typrogram" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
