@@ -19,7 +19,7 @@ describe('Home', () => {
 
   describe('Hero section', () => {
     it('renders the logo', () => {
-      expect(screen.getByAltText('Typing Repo Logo')).toBeInTheDocument();
+      expect(screen.getByAltText('Typrogram Logo')).toBeInTheDocument();
     });
 
     it('renders the main title', () => {
@@ -41,8 +41,8 @@ describe('Home', () => {
   });
 
   describe('How to Use section', () => {
-    it('renders the "How to Use TypingRepo" section', () => {
-      expect(screen.getByRole('heading', { level: 2, name: 'How to Use TypingRepo' })).toBeInTheDocument();
+    it('renders the "How to Use Typrogram" section', () => {
+      expect(screen.getByRole('heading', { level: 2, name: 'How to Use Typrogram' })).toBeInTheDocument();
     });
 
     it('renders the section description', () => {

@@ -41,7 +41,7 @@ export default function Footer() {
             Privacy Policy
           </Link>
           <Link
-            href="https://github.com/Shrimprin/typing_repo"
+            href="https://github.com/Shrimprin/typrogram"
             target="_blank"
             rel="noopener noreferrer"
             className={`
@@ -62,7 +62,7 @@ export default function Footer() {
               sm:text-sm
             `}
           >
-            {yearRange} TypingRepo. All rights reserved.
+            {yearRange} Typrogram. All rights reserved.
           </span>
         </div>
       </div>

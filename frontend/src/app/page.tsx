@@ -34,7 +34,7 @@ export default function Home() {
           <div className="mx-auto text-center">
             <div className="mb-8 flex justify-center">
               <div className="relative">
-                <Image src="/logo.svg" alt="Typing Repo Logo" width={512} height={512} />
+                <Image src="/logo.svg" alt="Typrogram Logo" width={512} height={512} />
               </div>
             </div>
             <h1 className="text-foreground mb-6 text-5xl font-bold">
@@ -56,7 +56,7 @@ export default function Home() {
       <section className="bg-background relative py-16">
         <div className="relative z-10 container mx-auto px-6">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-foreground mb-4 text-3xl font-bold">How to Use TypingRepo</h2>
+            <h2 className="text-foreground mb-4 text-3xl font-bold">How to Use Typrogram</h2>
             <p className="text-muted-foreground mb-16 text-lg">
               Get started with just 2 simple steps to improve your typing skills.
             </p>

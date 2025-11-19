@@ -4,7 +4,7 @@ import PageLayout from '@/components/common/PageLayout';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'This page describes the privacy policy for Typing Repo.',
+  description: 'This page describes the privacy policy for Typrogram.',
 };
 
 export default function PrivacyPolicy() {
@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
           >
             <p className="text-foreground">
               This Privacy Policy (hereinafter, &quot;this Policy&quot;) describes how we handle users&apos; personal
-              information in the service provided by Typing Repo (hereinafter, &quot;the Service&quot;).
+              information in the service provided by Typrogram (hereinafter, &quot;the Service&quot;).
             </p>
 
             <section className="mt-8">

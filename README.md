@@ -1,4 +1,4 @@
-# Typing Repo
+# Typrogram
 
 ## 概要
 GitHub上の好きなリポジトリをタイピング教材として読み込み、
