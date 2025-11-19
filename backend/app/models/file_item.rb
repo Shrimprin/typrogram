@@ -7,10 +7,7 @@ class FileItem < ApplicationRecord
   has_one :typing_progress, dependent: :destroy
   has_closure_tree
 
-  validates :name, presence: true
-  validates :status, presence: true
-  validates :type, presence: true
-  validates :path, presence: true
+  validates :name, :status, :type, :path, presence: true
 
   enum :type, {
     file: 0,

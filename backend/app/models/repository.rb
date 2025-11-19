@@ -6,10 +6,7 @@ class Repository < ApplicationRecord
   has_many :extensions, dependent: :destroy
 
   accepts_nested_attributes_for :extensions, allow_destroy: true
-
-  validates :commit_hash, presence: true
-  validates :name, presence: true
-  validates :url, presence: true
+  validates :commit_hash, :name, :url, presence: true
 
   BATCH_SIZE = 1000
 

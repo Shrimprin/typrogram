@@ -6,9 +6,6 @@ class TypingProgress < ApplicationRecord
 
   accepts_nested_attributes_for :typos, allow_destroy: true
 
-  validates :row, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :column, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :elapsed_seconds, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :total_correct_type_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
-  validates :total_typo_count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :row, :column, :elapsed_seconds, :total_correct_type_count, :total_typo_count,
+            presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 end
