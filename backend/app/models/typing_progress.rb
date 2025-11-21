@@ -32,20 +32,21 @@ class TypingProgress < ApplicationRecord
 
   private
 
-  def save_typos?(typos_params)
+  def save_typos(typos_params)
     return true if typos_params.blank?
 
     new_typos = typos.build(typos_params)
     result = Typo.import(new_typos, timestamps: true)
 
-    return true unless result.failed_instances.any?
+    failed_typos = result.failed_instances
+    return true unless failed_typos.any?
 
-    add_typo_errors(result.failed_instances)
-    false
+    add_typo_errors(failed_typos)
+    nil
   end
 
-  def add_typo_errors(failed_instances)
-    failed_instances.each do |failed_typo|
+  def add_typo_errors(failed_typos)
+    failed_typos.each do |failed_typo|
       failed_typo.errors.each do |error|
         errors.add("typos.#{error.attribute}", error.message)
       end

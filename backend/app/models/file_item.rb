@@ -78,7 +78,7 @@ class FileItem < ApplicationRecord
   private
 
   def save_typing_progress?(params)
-    return false if params[:typing_progress].nil?
+    return false if params[:typing_progress].blank?
 
     typing_progress_params = params[:typing_progress].except(:typos)
     typos_params = params[:typing_progress][:typos]
