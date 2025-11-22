@@ -117,7 +117,7 @@ export function useTypingHandler({
             elapsedSeconds: typingStats.elapsedSeconds,
             totalCorrectTypeCount: typingStats.totalCorrectTypeCount,
             totalTypoCount: typingStats.totalTypoCount,
-            typosAttributes: calculateTypos(typedTextLines, targetTextLines),
+            typos: calculateTypos(typedTextLines, targetTextLines),
           },
         },
       };
@@ -164,7 +164,7 @@ export function useTypingHandler({
               // typingStatsには最後のタイプの結果が反映されていないため、ここで加算する
               totalCorrectTypeCount: typingStats.totalCorrectTypeCount + (isLastTypeCorrect ? 1 : 0),
               totalTypoCount: typingStats.totalTypoCount + (isLastTypeCorrect ? 0 : 1),
-              typosAttributes: calculateTypos(typedTextLines, targetTextLines),
+              typos: calculateTypos(typedTextLines, targetTextLines),
             },
           },
         };

@@ -443,7 +443,7 @@ describe('useTypingHandler', () => {
                 elapsedSeconds: 0,
                 totalCorrectTypeCount: 18,
                 totalTypoCount: 2,
-                typosAttributes: [
+                typos: [
                   {
                     row: 1,
                     column: 4,
@@ -698,7 +698,7 @@ describe('useTypingHandler', () => {
                 elapsedSeconds: 0,
                 totalCorrectTypeCount: 39,
                 totalTypoCount: 2,
-                typosAttributes: [
+                typos: [
                   {
                     row: 1,
                     column: 4,

@@ -220,7 +220,7 @@ RSpec.describe 'Api::FileItems', type: :request do
                     elapsed_seconds: 330,
                     total_correct_type_count: 50,
                     total_typo_count: 10,
-                    typos_attributes: [
+                    typos: [
                       { row: 1, column: 1, character: 'a' },
                       { row: 2, column: 2, character: 'b' }
                     ]
@@ -284,7 +284,7 @@ RSpec.describe 'Api::FileItems', type: :request do
                     elapsed_seconds: 330,
                     total_correct_type_count: 50,
                     total_typo_count: 10,
-                    typos_attributes: [
+                    typos: [
                       { row: 1, column: 1, character: 'a' },
                       { row: 2, column: 2, character: 'b' }
                     ]
@@ -335,13 +335,20 @@ RSpec.describe 'Api::FileItems', type: :request do
     end
 
     context 'when invalid params is given' do
+      let(:invalid_params) do
+        {
+          row: nil,
+          column: nil
+        }
+      end
+
       it 'returns unprocessable entity status for both typed and typing status' do
         # typedとtypingの両方のパターンをテストする
         # それぞれを別のテストに分けるとrubocopのRepeatExample警告が出るためまとめた
 
         # status: typed
         patch api_repository_file_item_path(repository_id: repository.id, id: untyped_file_item.id),
-              params: { file_item: { status: :typed } }, headers: headers
+              params: { file_item: { status: :typed, typing_progress: invalid_params } }, headers: headers
 
         expect(response).to have_http_status(:unprocessable_content)
         json = response.parsed_body
@@ -350,7 +357,7 @@ RSpec.describe 'Api::FileItems', type: :request do
 
         # status: typing
         patch api_repository_file_item_path(repository_id: repository.id, id: untyped_file_item.id),
-              params: { file_item: { status: :typing } }, headers: headers
+              params: { file_item: { status: :typing, typing_progress: invalid_params } }, headers: headers
 
         expect(response).to have_http_status(:unprocessable_content)
         json = response.parsed_body

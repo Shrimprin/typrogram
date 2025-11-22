@@ -46,7 +46,7 @@ module Api
     def file_item_params
       params.expect(file_item: [:status, {
                       typing_progress: [:row, :column, :elapsed_seconds, :total_correct_type_count, :total_typo_count, {
-                        typos_attributes: [%i[row column character _destroy]]
+                        typos: [%i[row column character]]
                       }]
                     }])
     end
