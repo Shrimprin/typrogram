@@ -68,7 +68,7 @@ class FileItem < ApplicationRecord
 
   def update_with_typing_progress(params)
     transaction do
-      is_updated = update(params.except(:typing_progress)) && save_typing_progress?(params)
+      is_updated = update(params.except(:typing_progress)) && save_typing_progress(params)
       raise ActiveRecord::Rollback unless is_updated
 
       true
@@ -77,8 +77,8 @@ class FileItem < ApplicationRecord
 
   private
 
-  def save_typing_progress?(params)
-    return false if params[:typing_progress].blank?
+  def save_typing_progress(params)
+    return nil if params[:typing_progress].blank?
 
     typing_progress_params = params[:typing_progress].except(:typos)
     typos_params = params[:typing_progress][:typos]
@@ -94,7 +94,7 @@ class FileItem < ApplicationRecord
     return true if is_saved
 
     add_typing_progress_errors(target_typing_progress)
-    false
+    nil
   end
 
   def add_typing_progress_errors(typing_progress_instance)
