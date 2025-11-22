@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   class FileItemsController < ApplicationController
     before_action :set_repository, only: %i[show update]
     before_action :set_file_item, only: %i[show update]

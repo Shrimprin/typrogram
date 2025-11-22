@@ -307,7 +307,7 @@ RSpec.describe FileItem, type: :model do
       subject(:update_file_item_with_typing_progress) { untyped_file_item.update_with_typing_progress(valid_params) }
 
       before do
-        allow(untyped_file_item).to receive(:save_typing_progress?).and_return(false)
+        allow(untyped_file_item).to receive(:save_typing_progress).and_return(nil)
       end
 
       it 'returns nil' do
@@ -320,7 +320,7 @@ RSpec.describe FileItem, type: :model do
 
   describe '#save_typing_progress' do
     context 'when successful' do
-      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress?, valid_params) }
+      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress, valid_params) }
 
       it 'returns true' do
         expect(save_typing_progress).to be true
@@ -335,10 +335,10 @@ RSpec.describe FileItem, type: :model do
     end
 
     context 'when save failed' do
-      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress?, invalid_params) }
+      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress, invalid_params) }
 
-      it 'returns false' do
-        expect(save_typing_progress).to be false
+      it 'returns nil' do
+        expect(save_typing_progress).to be_nil
       end
 
       it 'adds errors to file_item' do
