@@ -11,6 +11,7 @@ RSpec.describe FileItem, type: :model do
       row: untyped_file_item.content.lines.count,
       column: untyped_file_item.content.lines.first.length,
       elapsed_seconds: 0,
+      total_correct_type_count: 0,
       total_typo_count: 0,
       typos: [
         {
@@ -307,7 +308,7 @@ RSpec.describe FileItem, type: :model do
       subject(:update_file_item_with_typing_progress) { untyped_file_item.update_with_typing_progress(valid_params) }
 
       before do
-        allow(untyped_file_item).to receive(:save_typing_progress?).and_return(false)
+        allow(untyped_file_item).to receive(:save_typing_progress).and_return(false)
       end
 
       it 'returns nil' do
@@ -319,31 +320,132 @@ RSpec.describe FileItem, type: :model do
   end
 
   describe '#save_typing_progress' do
-    context 'when successful' do
-      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress?, valid_params) }
+    context 'when successful with existing typing_progress' do
+      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress, valid_params) }
+
+      it 'returns true' do
+        expect(save_typing_progress).to be true
+      end
+
+      it 'updates existing typing progress' do
+        existing_typing_progress = untyped_file_item.typing_progress
+        save_typing_progress
+        updated_typing_progress = untyped_file_item.reload.typing_progress
+        expect(updated_typing_progress.id).to eq(existing_typing_progress.id)
+        expect_typing_progress_attributes(updated_typing_progress, untyped_file_item)
+      end
+
+      it 'updates typos' do
+        save_typing_progress
+        updated_typing_progress = untyped_file_item.typing_progress
+        expect_typo_attributes(updated_typing_progress.typos)
+      end
+    end
+
+    context 'when successful without existing typing_progress' do
+      subject(:save_typing_progress) { file_item_without_typing_progress.send(:save_typing_progress, params_for_new) }
+
+      let(:file_item_without_typing_progress) { create(:file_item, repository:, parent: parent_dir) }
+      let(:typing_progress_params_for_new) do
+        {
+          row: file_item_without_typing_progress.content.lines.count,
+          column: file_item_without_typing_progress.content.lines.first.length,
+          elapsed_seconds: 0,
+          total_correct_type_count: 0,
+          total_typo_count: 0,
+          typos: [
+            {
+              row: 1,
+              column: 1,
+              character: 'a'
+            },
+            {
+              row: 2,
+              column: 2,
+              character: 'b'
+            }
+          ]
+        }
+      end
+      let(:params_for_new) do
+        {
+          status: :typed,
+          typing_progress: typing_progress_params_for_new
+        }
+      end
 
       it 'returns true' do
         expect(save_typing_progress).to be true
       end
 
       it 'creates a new typing progress' do
-        save_typing_progress
-        created_typing_progress = untyped_file_item.typing_progress
-        expect_typing_progress_attributes(created_typing_progress, untyped_file_item)
+        expect do
+          save_typing_progress
+        end.to change(TypingProgress, :count).by(1)
+        created_typing_progress = file_item_without_typing_progress.typing_progress
+        expect_typing_progress_attributes(created_typing_progress, file_item_without_typing_progress)
+      end
+
+      it 'creates typos' do
+        expect do
+          save_typing_progress
+        end.to change(Typo, :count).by(2)
+        created_typing_progress = file_item_without_typing_progress.typing_progress
         expect_typo_attributes(created_typing_progress.typos)
       end
     end
 
     context 'when save failed' do
-      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress?, invalid_params) }
+      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress, invalid_params) }
 
-      it 'returns false' do
-        expect(save_typing_progress).to be false
+      it 'returns nil' do
+        expect(save_typing_progress).to be_nil
       end
 
       it 'adds errors to file_item' do
         save_typing_progress
         expect_validation_errors(untyped_file_item)
+      end
+    end
+
+    context 'when typos validation failed' do
+      subject(:save_typing_progress) { untyped_file_item.send(:save_typing_progress, invalid_typos_params) }
+
+      let(:invalid_typos_params) do
+        {
+          status: :typed,
+          typing_progress: {
+            row: untyped_file_item.content.lines.count,
+            column: untyped_file_item.content.lines.first.length,
+            elapsed_seconds: 0,
+            total_correct_type_count: 0,
+            total_typo_count: 0,
+            typos: [
+              {
+                row: nil,
+                column: nil,
+                character: nil
+              },
+              {
+                row: 2,
+                column: 2,
+                character: ''
+              }
+            ]
+          }
+        }
+      end
+
+      it 'returns nil' do
+        expect(save_typing_progress).to be_nil
+      end
+
+      it 'adds typo errors to file_item' do
+        save_typing_progress
+        errors = untyped_file_item.errors
+        expect(errors[:'typing_progress.typos.row']).to include("can't be blank")
+        expect(errors[:'typing_progress.typos.column']).to include("can't be blank")
+        expect(errors[:'typing_progress.typos.character']).to include("can't be blank")
       end
     end
   end
