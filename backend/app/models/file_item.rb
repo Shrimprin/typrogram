@@ -83,22 +83,21 @@ class FileItem < ApplicationRecord
     typing_progress_params = params[:typing_progress].except(:typos)
     typos_params = params[:typing_progress][:typos]
 
-    target_typing_progress = typing_progress || build_typing_progress(typing_progress_params)
-
     is_saved = if typing_progress.present?
-                 target_typing_progress.update_with_typos(typing_progress_params, typos_params)
+                 typing_progress.update_with_typos(typing_progress_params, typos_params)
                else
-                 target_typing_progress.save_with_typos(typos_params)
+                 new_typing_progress = build_typing_progress(typing_progress_params)
+                 new_typing_progress.save_with_typos(typos_params)
                end
 
     return true if is_saved
 
-    add_typing_progress_errors(target_typing_progress)
+    add_typing_progress_errors(typing_progress)
     nil
   end
 
-  def add_typing_progress_errors(typing_progress_instance)
-    typing_progress_instance.errors.each do |error|
+  def add_typing_progress_errors(failed_typing_progress)
+    failed_typing_progress.errors.each do |error|
       errors.add("typing_progress.#{error.attribute}", error.message)
     end
   end
