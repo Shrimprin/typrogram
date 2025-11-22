@@ -207,7 +207,7 @@ RSpec.describe FileItem, type: :model do
 
     context 'when update_parent_status failed' do
       before do
-        allow(untyped_file_item).to receive(:update_parent_status).and_return(false)
+        allow(untyped_file_item).to receive(:update_parent_status).and_return(nil)
       end
 
       it 'returns nil' do
@@ -294,7 +294,7 @@ RSpec.describe FileItem, type: :model do
       subject(:update_file_item_with_typing_progress) { untyped_file_item.update_with_typing_progress(valid_params) }
 
       before do
-        allow(untyped_file_item).to receive(:update).and_return(false)
+        allow(untyped_file_item).to receive(:update).and_return(nil)
       end
 
       it 'returns nil' do
@@ -308,7 +308,7 @@ RSpec.describe FileItem, type: :model do
       subject(:update_file_item_with_typing_progress) { untyped_file_item.update_with_typing_progress(valid_params) }
 
       before do
-        allow(untyped_file_item).to receive(:save_typing_progress).and_return(false)
+        allow(untyped_file_item).to receive(:save_typing_progress).and_return(nil)
       end
 
       it 'returns nil' do
