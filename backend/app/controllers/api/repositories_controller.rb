@@ -3,7 +3,7 @@
 module Api
   class RepositoriesController < ApplicationController
     before_action :set_repository, only: %i[show destroy]
-    after_action { pagy_headers_merge(@pagy) if @pagy }
+    after_action { response.headers.merge!(@pagy.headers_hash) if @pagy }
 
     def index
       @pagy, repositories = pagy(@current_user.repositories.order(last_typed_at: :asc))
