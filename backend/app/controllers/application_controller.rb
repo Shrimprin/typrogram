@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
-  include Pagy::Backend
+  include Pagy::Method
 
   before_action :authenticate_request!
 
