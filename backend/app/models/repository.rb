@@ -37,7 +37,7 @@ class Repository < ApplicationRecord
   def destroy_with_associations
     transaction do
       delete_associated_records
-      destroy
+      destroy!
     end
   end
 
