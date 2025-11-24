@@ -34,6 +34,13 @@ class Repository < ApplicationRecord
     end
   end
 
+  def destroy_with_associations
+    transaction do
+      delete_associated_records
+      destroy
+    end
+  end
+
   private
 
   def save_file_items(client)
@@ -95,6 +102,13 @@ class Repository < ApplicationRecord
         status: :untyped
       )
     end
+  end
+
+  def delete_associated_records
+    Typo.delete_by_repository(id)
+    TypingProgress.delete_by_repository(id)
+    file_items.delete_all
+    extensions.delete_all
   end
 
   def active?(node)
