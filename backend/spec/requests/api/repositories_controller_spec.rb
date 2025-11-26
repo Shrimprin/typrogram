@@ -301,7 +301,7 @@ RSpec.describe API::RepositoriesController, type: :request do
   end
 
   describe 'DELETE /api/repositories/:id' do
-    let(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
+    let!(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
 
     context 'when repository exists' do
       subject(:delete_repository) do
@@ -349,6 +349,29 @@ RSpec.describe API::RepositoriesController, type: :request do
         expect(response).to have_http_status(:not_found)
         json = response.parsed_body
         expect(json['message']).to eq('Repository not found.')
+      end
+    end
+
+    context 'when destroy fails' do
+      before do
+        # rubocop:disable RSpec/AnyInstance
+        allow_any_instance_of(Repository).to receive(:destroy_with_associations)
+          .and_raise(StandardError, 'Database error')
+        # rubocop:enable RSpec/AnyInstance
+      end
+
+      it 'returns internal_server_error status' do
+        delete api_repository_path(repository), headers: headers
+
+        expect(response).to have_http_status(:internal_server_error)
+        json = response.parsed_body
+        expect(json['message']).to eq('Failed to delete repository.')
+      end
+
+      it 'does not delete the repository' do
+        expect do
+          delete api_repository_path(repository), headers: headers
+        end.not_to change(Repository, :count)
       end
     end
   end

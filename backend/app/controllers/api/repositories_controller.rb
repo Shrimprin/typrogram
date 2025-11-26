@@ -46,8 +46,11 @@ module API
     end
 
     def destroy
-      @repository.destroy
+      @repository.destroy_with_associations
       render json: { message: 'Repository deleted successfully.' }, status: :ok
+    rescue StandardError => e
+      LogUtils.log_error(e, 'RepositoriesController#destroy')
+      render json: { message: 'Failed to delete repository.' }, status: :internal_server_error
     end
 
     private

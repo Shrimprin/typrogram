@@ -6,6 +6,15 @@ class Typo < ApplicationRecord
   validates :row, :column, presence: true
   validate :character_not_nil_or_empty_string
 
+  def self.delete_by_repository(repository_ids)
+    repository_ids = Array(repository_ids)
+    return if repository_ids.empty?
+
+    joins(typing_progress: { file_item: :repository })
+      .where(repositories: { id: repository_ids })
+      .delete_all
+  end
+
   private
 
   def character_not_nil_or_empty_string

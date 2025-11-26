@@ -154,4 +154,39 @@ RSpec.describe TypingProgress, type: :model do
       end
     end
   end
+
+  describe '.delete_by_repository' do
+    let(:user) { create(:user) }
+    let!(:first_repository) { create(:repository, user:) }
+    let!(:second_repository) { create(:repository, user:) }
+
+    before do
+      create(:file_item, :with_typing_progress, repository: first_repository)
+      create(:file_item, :with_typing_progress, repository: second_repository)
+    end
+
+    context 'when single repository_id is given' do
+      it 'deletes a typing_progresses' do
+        expect do
+          described_class.delete_by_repository(first_repository.id)
+        end.to change(described_class, :count).by(-1)
+      end
+    end
+
+    context 'when array of repository_ids is given' do
+      it 'deletes all typing_progresses for the repositories' do
+        expect do
+          described_class.delete_by_repository([first_repository.id, second_repository.id])
+        end.to change(described_class, :count).by(-2)
+      end
+    end
+
+    context 'when empty array is given' do
+      it 'does not delete any typing_progresses' do
+        expect do
+          described_class.delete_by_repository([])
+        end.not_to change(described_class, :count)
+      end
+    end
+  end
 end

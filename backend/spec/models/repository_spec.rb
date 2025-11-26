@@ -147,6 +147,45 @@ RSpec.describe Repository, type: :model do
     end
   end
 
+  describe '#destroy_with_associations' do
+    let(:user) { create(:user) }
+    let!(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
+
+    before do
+      create(:file_item, :with_typing_progress_and_typos, repository:)
+    end
+
+    it 'deletes the repository' do
+      expect do
+        repository.destroy_with_associations
+      end.to change(described_class, :count).by(-1)
+    end
+
+    it 'deletes all associated typos' do
+      expect do
+        repository.destroy_with_associations
+      end.to change(Typo, :count).by(-2)
+    end
+
+    it 'deletes all associated typing_progresses' do
+      expect do
+        repository.destroy_with_associations
+      end.to change(TypingProgress, :count).by(-1)
+    end
+
+    it 'deletes all associated file_items' do
+      expect do
+        repository.destroy_with_associations
+      end.to change(FileItem, :count).by(-7)
+    end
+
+    it 'deletes all associated extensions' do
+      expect do
+        repository.destroy_with_associations
+      end.to change(Extension, :count).by(-2)
+    end
+  end
+
   describe '#save_file_items' do
     let(:repository) { create(:repository, :with_extensions) }
     let(:file_tree) do

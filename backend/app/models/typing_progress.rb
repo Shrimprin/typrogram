@@ -27,6 +27,15 @@ class TypingProgress < ApplicationRecord
     end
   end
 
+  def self.delete_by_repository(repository_ids)
+    repository_ids = Array(repository_ids)
+    return if repository_ids.empty?
+
+    joins(file_item: :repository)
+      .where(repositories: { id: repository_ids })
+      .delete_all
+  end
+
   private
 
   def save_typos(typos_params)
