@@ -10,6 +10,10 @@ RSpec.describe API::UsersController, type: :request do
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
   describe 'DELETE /api/users/:id' do
+    subject(:delete_user) do
+      delete "/api/users/#{user.id}", headers: headers
+    end
+
     it 'deletes the user and all associated records' do
       user_id = user.id
       repository_id = repository.id
@@ -20,7 +24,7 @@ RSpec.describe API::UsersController, type: :request do
 
       # rubocop:disable Layout/MultilineMethodCallIndentation
       expect do
-        delete "/api/users/#{user.id}", headers: headers
+        delete_user
       end.to change(User, :count).by(-1)
         .and change(Repository, :count).by(-1)
         .and change(FileItem, :count).by(-1)
@@ -38,7 +42,7 @@ RSpec.describe API::UsersController, type: :request do
     end
 
     it 'returns success status and message' do
-      delete "/api/users/#{user.id}", headers: headers
+      delete_user
 
       expect(response).to have_http_status(:ok)
 
@@ -52,7 +56,7 @@ RSpec.describe API::UsersController, type: :request do
         allow(User).to receive(:find).with(user.id).and_return(user)
         allow(user).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
 
-        delete "/api/users/#{user.id}", headers: headers
+        delete_user
 
         expect(response).to have_http_status(:unprocessable_content)
 
@@ -65,7 +69,7 @@ RSpec.describe API::UsersController, type: :request do
         allow(User).to receive(:find).with(user.id).and_return(user)
         allow(user).to receive(:destroy!).and_raise(StandardError)
 
-        delete "/api/users/#{user.id}", headers: headers
+        delete_user
 
         expect(response).to have_http_status(:internal_server_error)
 

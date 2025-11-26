@@ -7,9 +7,13 @@ RSpec.describe API::AuthController, type: :request do
     let(:valid_params) { { auth: { github_id: '12345', name: 'テストユーザー' } } }
 
     context 'when new user' do
+      subject(:create_user) do
+        post '/api/auth/callback/github', params: valid_params
+      end
+
       it 'creates user and returns user data' do
         expect do
-          post '/api/auth/callback/github', params: valid_params
+          create_user
         end.to change(User, :count).by(1)
 
         expect(response).to have_http_status(:ok)
@@ -27,10 +31,14 @@ RSpec.describe API::AuthController, type: :request do
     end
 
     context 'when existing user' do
+      subject(:authenticate_existing_user) do
+        post '/api/auth/callback/github', params: valid_params
+      end
+
       it 'returns user data' do
         existing_user = create(:user, github_id: valid_params[:auth][:github_id], name: valid_params[:auth][:name])
         expect do
-          post '/api/auth/callback/github', params: valid_params
+          authenticate_existing_user
         end.not_to change(User, :count)
 
         expect(response).to have_http_status(:ok)
@@ -48,13 +56,18 @@ RSpec.describe API::AuthController, type: :request do
     end
 
     context 'when existing user with different name' do
+      subject(:update_user_name) do
+        post '/api/auth/callback/github', params: updated_params
+      end
+
+      let(:new_name) { 'new_name' }
+      let(:updated_params) { { auth: { github_id: valid_params[:auth][:github_id], name: new_name } } }
+
       it 'updates name' do
         existing_user = create(:user, github_id: valid_params[:auth][:github_id], name: 'old_name')
-        new_name = 'new_name'
-        updated_params = { auth: { github_id: valid_params[:auth][:github_id], name: new_name } }
 
         expect do
-          post '/api/auth/callback/github', params: updated_params
+          update_user_name
         end.not_to change(User, :count)
 
         existing_user.reload
@@ -63,9 +76,14 @@ RSpec.describe API::AuthController, type: :request do
     end
 
     context 'when invalid params' do
-      it 'returns error message' do
-        invalid_params = { auth: { github_id: '12345' } }
+      subject(:authenticate_with_invalid_params) do
         post '/api/auth/callback/github', params: invalid_params
+      end
+
+      let(:invalid_params) { { auth: { github_id: '12345' } } }
+
+      it 'returns error message' do
+        authenticate_with_invalid_params
 
         expect(response).to have_http_status(:unprocessable_content)
         json = response.parsed_body
@@ -74,10 +92,16 @@ RSpec.describe API::AuthController, type: :request do
     end
 
     context 'when unexpected error occurs' do
-      it 'returns error message' do
-        allow(User).to receive(:find_or_initialize_by).and_raise(StandardError)
-
+      subject(:authenticate_when_error_occurs) do
         post '/api/auth/callback/github', params: valid_params
+      end
+
+      before do
+        allow(User).to receive(:find_or_initialize_by).and_raise(StandardError)
+      end
+
+      it 'returns error message' do
+        authenticate_when_error_occurs
 
         expect(response).to have_http_status(:internal_server_error)
         json = response.parsed_body

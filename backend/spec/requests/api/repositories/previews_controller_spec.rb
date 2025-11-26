@@ -6,6 +6,10 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
   include_context 'with authenticated user'
 
   describe 'GET /api/repositories/preview' do
+    subject(:get_preview_with_valid_url) do
+      get '/api/repositories/preview', params: { repository_preview: { url: valid_url } }, headers: headers
+    end
+
     let(:valid_url) { 'https://github.com/username/repository' }
     let(:valid_repository_url) { 'username/repository' }
 
@@ -40,21 +44,22 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         allow(github_client_mock).to receive(:tree)
           .with(valid_repository_url, 'commit_hash', recursive: true)
           .and_return(file_tree_data)
-
-        get '/api/repositories/preview', params: { repository_preview: { url: valid_url } }, headers: headers
       end
 
       it 'returns ok status' do
+        get_preview_with_valid_url
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns repository name and url' do
+        get_preview_with_valid_url
         json = response.parsed_body
         expect(json['name']).to eq('repository')
         expect(json['url']).to eq(valid_url)
       end
 
       it 'returns extensions order by file count and name' do
+        get_preview_with_valid_url
         json_extensions = response.parsed_body['extensions']
 
         expect(json_extensions.length).to eq(4)
@@ -66,6 +71,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       end
 
       it 'does not return directory' do
+        get_preview_with_valid_url
         json_extensions = response.parsed_body['extensions']
 
         directory = json_extensions.find { |extension| extension['name'] == 'directory' }
@@ -85,17 +91,21 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
     end
 
     context 'when repository is non-existent' do
-      before do
-        non_existent_repository_url = 'username/invalid_url'
-        github_client_mock = instance_double(Octokit::Client)
-        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(non_existent_repository_url).and_raise(Octokit::NotFound)
-
-        non_existent_url = 'https://github.com/username/invalid_url'
+      subject(:get_preview_with_non_existent_url) do
         get '/api/repositories/preview', params: { repository_preview: { url: non_existent_url } }, headers: headers
       end
 
+      let(:non_existent_repository_url) { 'username/invalid_url' }
+      let(:non_existent_url) { 'https://github.com/username/invalid_url' }
+
+      before do
+        github_client_mock = instance_double(Octokit::Client)
+        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        allow(github_client_mock).to receive(:repository).with(non_existent_repository_url).and_raise(Octokit::NotFound)
+      end
+
       it 'returns not found status' do
+        get_preview_with_non_existent_url
         expect(response).to have_http_status(:not_found)
         json = response.parsed_body
         expect(json['message']).to eq('Repository not found.')
@@ -107,11 +117,10 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::TooManyRequests)
-
-        get '/api/repositories/preview', params: { repository_preview: { url: valid_url } }, headers: headers
       end
 
       it 'returns too_many_requests status' do
+        get_preview_with_valid_url
         expect(response).to have_http_status(:too_many_requests)
         json = response.parsed_body
         expect(json['message']).to eq('Too many requests. Please try again later.')
@@ -123,11 +132,10 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::Unauthorized)
-
-        get '/api/repositories/preview', params: { repository_preview: { url: valid_url } }, headers: headers
       end
 
       it 'returns unauthorized status' do
+        get_preview_with_valid_url
         expect(response).to have_http_status(:unauthorized)
         json = response.parsed_body
         expect(json['message']).to eq('Invalid access token.')
@@ -139,11 +147,10 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(StandardError)
-
-        get '/api/repositories/preview', params: { repository_preview: { url: valid_url } }, headers: headers
       end
 
       it 'returns internal_server_error status' do
+        get_preview_with_valid_url
         expect(response).to have_http_status(:internal_server_error)
         json = response.parsed_body
         expect(json['message']).to eq('An error occurred. Please try again later.')

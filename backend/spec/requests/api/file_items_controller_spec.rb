@@ -8,6 +8,13 @@ RSpec.describe API::FileItemsController, type: :request do
   let!(:repository) { create(:repository, :with_file_items, user: user) }
 
   describe 'GET /api/repositories/:repository_id/file_items/:id' do
+    subject(:get_nil_content_file_item) do
+      get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+    end
+
+    let(:get_file_item) do
+      get api_repository_file_item_path(repository_id: repository.id, id: file_item.id), headers: headers
+    end
     let(:file_item) { create(:file_item, :typing, repository:) }
     let(:parent_dir) { create(:file_item, :directory, repository:) }
     let(:nil_content_file_item) { create(:file_item, :nil_content, repository:, parent: parent_dir) }
@@ -20,14 +27,15 @@ RSpec.describe API::FileItemsController, type: :request do
 
       before do
         create(:typo, typing_progress:, row: 1, column: 1, character: 'a')
-        get api_repository_file_item_path(repository_id: repository.id, id: file_item.id), headers: headers
       end
 
       it 'returns the success status' do
+        get_file_item
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns the file item' do
+        get_file_item
         json = response.parsed_body
 
         expect(json).to have_json_attributes(
@@ -41,6 +49,7 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns the typing progress' do
+        get_file_item
         json = response.parsed_body
 
         expect(json['typing_progress']).to have_json_attributes(
@@ -96,7 +105,7 @@ RSpec.describe API::FileItemsController, type: :request do
         expect(nil_content_file_item.content).to be_nil
         expect(nil_content_file_item.status).to eq('untyped')
 
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         nil_content_file_item.reload
         expect(nil_content_file_item.content).to eq('Hello, World!')
@@ -119,7 +128,7 @@ RSpec.describe API::FileItemsController, type: :request do
         expect(nil_content_file_item.content).to be_nil
         expect(nil_content_file_item.status).to eq('untyped')
 
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         nil_content_file_item.reload
         expect(nil_content_file_item.content).to eq('こんにちは、世界！')
@@ -132,7 +141,7 @@ RSpec.describe API::FileItemsController, type: :request do
 
         expect(parent_dir.status).to eq('untyped')
 
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         parent_dir.reload
         expect(parent_dir.status).to eq('typed')
@@ -140,8 +149,12 @@ RSpec.describe API::FileItemsController, type: :request do
     end
 
     context 'when file item does not exist' do
-      it 'returns not found status' do
+      subject(:get_non_existent_file_item) do
         get api_repository_file_item_path(repository_id: repository.id, id: 0), headers: headers
+      end
+
+      it 'returns not found status' do
+        get_non_existent_file_item
 
         expect(response).to have_http_status(:not_found)
       end
@@ -158,7 +171,7 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns too many requests status' do
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         expect(response).to have_http_status(:too_many_requests)
         json = response.parsed_body
@@ -177,7 +190,7 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns unauthorized status' do
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         expect(response).to have_http_status(:unauthorized)
         json = response.parsed_body
@@ -196,7 +209,7 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns internal server error status' do
-        get api_repository_file_item_path(repository_id: repository.id, id: nil_content_file_item.id), headers: headers
+        get_nil_content_file_item
 
         expect(response).to have_http_status(:internal_server_error)
         json = response.parsed_body
@@ -209,7 +222,7 @@ RSpec.describe API::FileItemsController, type: :request do
     let(:untyped_file_item) { repository.file_items.where(type: :file, status: :untyped).first }
 
     context 'when status is typed' do
-      before do
+      subject(:update_file_item_to_typed) do
         patch api_repository_file_item_path(repository_id: repository.id, id: untyped_file_item.id),
               params: {
                 file_item: {
@@ -230,10 +243,12 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns success status' do
+        update_file_item_to_typed
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns repository with file items and progress' do
+        update_file_item_to_typed
         json = response.parsed_body
         repository.reload
 
@@ -250,11 +265,13 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'updates the file item status to typed' do
+        update_file_item_to_typed
         updated_file_item = FileItem.find(untyped_file_item.id)
         expect(updated_file_item.status).to eq('typed')
       end
 
       it 'updates the file item typing progress and typos' do
+        update_file_item_to_typed
         updated_file_item = FileItem.find(untyped_file_item.id)
         expect(updated_file_item.typing_progress.row).to eq(untyped_file_item.content.split("\n").size - 1)
         expect(updated_file_item.typing_progress.column).to eq(untyped_file_item.content.split("\n").last.size)
@@ -273,7 +290,7 @@ RSpec.describe API::FileItemsController, type: :request do
     end
 
     context 'when status is typing' do
-      before do
+      subject(:update_file_item_to_typing) do
         patch api_repository_file_item_path(repository_id: repository.id, id: untyped_file_item.id),
               params: {
                 file_item: {
@@ -294,20 +311,24 @@ RSpec.describe API::FileItemsController, type: :request do
       end
 
       it 'returns success status' do
+        update_file_item_to_typing
         expect(response).to have_http_status(:ok)
       end
 
       it 'returns file item' do
+        update_file_item_to_typing
         json = response.parsed_body
         expect(json['id']).to eq(untyped_file_item.id)
       end
 
       it 'updates the file item status to typing' do
+        update_file_item_to_typing
         updated_file_item = FileItem.find(untyped_file_item.id)
         expect(updated_file_item.status).to eq('typing')
       end
 
       it 'updates the typing progress and typos' do
+        update_file_item_to_typing
         updated_file_item = FileItem.find(untyped_file_item.id)
         expect(updated_file_item.typing_progress.row).to eq(3)
         expect(updated_file_item.typing_progress.column).to eq(1)
