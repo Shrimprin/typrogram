@@ -107,7 +107,7 @@ RSpec.describe API::RepositoriesController, type: :request do
   end
 
   describe 'GET /api/repositories/:id' do
-    let!(:repository) { create(:repository, :with_file_items, user: user) }
+    let(:repository) { create(:repository, :with_file_items, user: user) }
 
     context 'when repository exists' do
       it 'returns the repository and success status' do
@@ -296,7 +296,7 @@ RSpec.describe API::RepositoriesController, type: :request do
   end
 
   describe 'DELETE /api/repositories/:id' do
-    let!(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
+    let(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
 
     context 'when repository exists' do
       before do
