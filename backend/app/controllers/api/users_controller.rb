@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Api
+module API
   class UsersController < ApplicationController
     def destroy
       user_id = params[:id].to_i

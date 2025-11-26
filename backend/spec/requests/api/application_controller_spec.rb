@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'ApplicationController', type: :request do
+RSpec.describe ApplicationController, type: :request do
   let(:user) { create(:user) }
   # テスト用のダミーコントローラーをスタブとして定義
   let(:test_controller) do
@@ -30,9 +30,13 @@ RSpec.describe 'ApplicationController', type: :request do
   end
 
   describe 'Authentication before_action' do
+    subject(:get_test_authentication) do
+      get '/test_authentication', headers: headers
+    end
+
     context 'when token is valid' do
       it 'returns success status and current_user_id' do
-        get '/test_authentication', headers: headers
+        get_test_authentication
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body['user_id']).to eq(user.id)
@@ -43,7 +47,7 @@ RSpec.describe 'ApplicationController', type: :request do
       let(:headers) { { 'Authorization' => 'Bearer invalid-token' } }
 
       it 'returns unauthorized status' do
-        get '/test_authentication', headers: headers
+        get_test_authentication
 
         expect(response).to have_http_status(:unauthorized)
         expect(response.parsed_body['message']).to eq('Please login.')
@@ -55,7 +59,7 @@ RSpec.describe 'ApplicationController', type: :request do
       let(:headers) { { 'Authorization' => "Bearer #{expired_token}" } }
 
       it 'returns unauthorized status' do
-        get '/test_authentication', headers: headers
+        get_test_authentication
 
         expect(response).to have_http_status(:unauthorized)
         expect(response.parsed_body['message']).to eq('Please login.')
@@ -67,7 +71,7 @@ RSpec.describe 'ApplicationController', type: :request do
       let(:headers) { { 'Authorization' => "Bearer #{non_existent_user_token}" } }
 
       it 'returns unauthorized status' do
-        get '/test_authentication', headers: headers
+        get_test_authentication
 
         expect(response).to have_http_status(:unauthorized)
         expect(response.parsed_body['message']).to eq('Please login.')
