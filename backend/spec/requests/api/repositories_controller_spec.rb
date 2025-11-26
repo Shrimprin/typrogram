@@ -94,7 +94,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       end
     end
 
-    context 'when repository has any file items' do
+    context 'when repository does not have any file items' do
       it 'returns progress 1.0' do
         create(:repository, user: user)
         get api_repositories_path, headers: headers
