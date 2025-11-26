@@ -301,7 +301,7 @@ RSpec.describe API::RepositoriesController, type: :request do
   end
 
   describe 'DELETE /api/repositories/:id' do
-    let(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
+    let!(:repository) { create(:repository, :with_extensions, :with_file_items, user:) }
 
     context 'when repository exists' do
       subject(:delete_repository) do
