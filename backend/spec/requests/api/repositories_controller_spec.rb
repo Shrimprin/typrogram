@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'API::Repositories', type: :request do
+RSpec.describe API::RepositoriesController, type: :request do
   include_context 'with authenticated user'
 
   describe 'GET /api/repositories' do

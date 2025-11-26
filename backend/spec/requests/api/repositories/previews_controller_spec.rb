@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'API::Repositories::Previews', type: :request do
+RSpec.describe API::Repositories::PreviewsController, type: :request do
   include_context 'with authenticated user'
 
   describe 'GET /api/repositories/preview' do

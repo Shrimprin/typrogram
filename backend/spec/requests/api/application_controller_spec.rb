@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'ApplicationController', type: :request do
+RSpec.describe ApplicationController, type: :request do
   let(:user) { create(:user) }
   # テスト用のダミーコントローラーをスタブとして定義
   let(:test_controller) do
