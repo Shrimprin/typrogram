@@ -18,10 +18,12 @@ Free typing game for programmers. You can import any GitHub repository and pract
 ## Demo
 
 Step 1: Import GitHub Repository
-<video src="frontend/public/demo/step1_import-repository.mp4" controls muted playsinline style="max-width: 100%;"></video>
+
+https://github.com/user-attachments/assets/f7b695ee-a0f5-4d76-97ef-f0b138278c19
 
 Step 2: Start Typing Practice
-<video src="frontend/public/demo/step2_typing.mp4" controls muted playsinline style="max-width: 100%;"></video>
+
+https://github.com/user-attachments/assets/febb259b-5038-4707-b99a-945b0091bb2e
 
 ## Tech Stack
 
