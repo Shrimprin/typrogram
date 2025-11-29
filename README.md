@@ -6,7 +6,7 @@ Free typing game for programmers. You can import any GitHub repository and pract
 
 ## URL
 
-https://typrogram.com
+[https://typrogram.com](https://typrogram.com)
 
 ## Features
 
