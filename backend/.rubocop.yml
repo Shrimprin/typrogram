@@ -36,6 +36,10 @@ Style/AsciiComments:
 Style/Documentation:
   Enabled: false
 
+# クラスの定義はAPI::RepositoriesControllerのような書き方にする
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
 # 文字列に値が代入されて変わっていないかチェック
 Style/FrozenStringLiteralComment:
   Enabled: true
