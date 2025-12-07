@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe API::AuthController, type: :request do
-  describe 'POST /api/auth/callback/github' do
-    let(:valid_params) { { auth: { github_id: '12345', name: 'テストユーザー' } } }
+RSpec.describe API::LoginController, type: :request do
+  describe 'POST /api/login' do
+    let(:valid_params) { { github_id: '12345', name: 'テストユーザー' } }
 
     context 'when new user' do
       subject(:create_user) do
-        post '/api/auth/callback/github', params: valid_params
+        post '/api/login', params: valid_params
       end
 
       it 'creates user and returns user data' do
@@ -32,11 +32,11 @@ RSpec.describe API::AuthController, type: :request do
 
     context 'when existing user' do
       subject(:authenticate_existing_user) do
-        post '/api/auth/callback/github', params: valid_params
+        post '/api/login', params: valid_params
       end
 
       it 'returns user data' do
-        existing_user = create(:user, github_id: valid_params[:auth][:github_id], name: valid_params[:auth][:name])
+        existing_user = create(:user, github_id: valid_params[:github_id], name: valid_params[:name])
         expect do
           authenticate_existing_user
         end.not_to change(User, :count)
@@ -57,14 +57,14 @@ RSpec.describe API::AuthController, type: :request do
 
     context 'when existing user with different name' do
       subject(:update_user_name) do
-        post '/api/auth/callback/github', params: updated_params
+        post '/api/login', params: updated_params
       end
 
       let(:new_name) { 'new_name' }
-      let(:updated_params) { { auth: { github_id: valid_params[:auth][:github_id], name: new_name } } }
+      let(:updated_params) { { github_id: valid_params[:github_id], name: new_name } }
 
       it 'updates name' do
-        existing_user = create(:user, github_id: valid_params[:auth][:github_id], name: 'old_name')
+        existing_user = create(:user, github_id: valid_params[:github_id], name: 'old_name')
 
         expect do
           update_user_name
@@ -77,10 +77,10 @@ RSpec.describe API::AuthController, type: :request do
 
     context 'when invalid params' do
       subject(:authenticate_with_invalid_params) do
-        post '/api/auth/callback/github', params: invalid_params
+        post '/api/login', params: invalid_params
       end
 
-      let(:invalid_params) { { auth: { github_id: '12345' } } }
+      let(:invalid_params) { { github_id: '12345' } }
 
       it 'returns error message' do
         authenticate_with_invalid_params
@@ -93,7 +93,7 @@ RSpec.describe API::AuthController, type: :request do
 
     context 'when unexpected error occurs' do
       subject(:authenticate_when_error_occurs) do
-        post '/api/auth/callback/github', params: valid_params
+        post '/api/login', params: valid_params
       end
 
       before do
