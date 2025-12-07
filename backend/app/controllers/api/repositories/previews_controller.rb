@@ -4,7 +4,7 @@ module API
   module Repositories
     class PreviewsController < ApplicationController
       def show
-        url = preview_params[:url]
+        url = params[:repository_preview][:url]
         repository_url = UrlUtils.extract_github_repository_path(url)
 
         if repository_url.nil?
@@ -31,10 +31,6 @@ module API
       end
 
       private
-
-      def preview_params
-        params.expect(repository_preview: [:url])
-      end
 
       def build_repository_preview_data(client, repository_url, url)
         repository_info = client.repository(repository_url)
