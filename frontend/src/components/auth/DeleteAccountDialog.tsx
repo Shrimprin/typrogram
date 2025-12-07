@@ -14,11 +14,10 @@ export default function DeleteAccountDialog() {
 
   const deleteUser = async () => {
     const accessToken = session?.user?.accessToken;
-    const userId = session?.user?.userId;
 
-    if (!accessToken || !userId) return;
+    if (!accessToken) return;
 
-    await axiosDelete(`/api/users/${userId}`, accessToken);
+    await axiosDelete('/api/users', accessToken);
   };
 
   const handleDelete = async () => {
