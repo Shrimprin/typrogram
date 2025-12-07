@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resource :login, only: [:create], controller: 'login'
-    resources :users, only: [:destroy]
+    resource :users, only: [:destroy]
     namespace :repositories do
       resource :preview, only: [:show]
     end

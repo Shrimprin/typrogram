@@ -3,13 +3,6 @@
 module API
   class UsersController < ApplicationController
     def destroy
-      user_id = params[:id].to_i
-
-      if @current_user.id != user_id
-        render json: { message: 'Unauthorized access.' }, status: :forbidden
-        return
-      end
-
       @current_user.destroy_with_associations
       render json: { message: 'Account has been successfully deleted.' }, status: :ok
     rescue ActiveRecord::RecordNotDestroyed => e
