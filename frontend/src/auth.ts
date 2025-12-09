@@ -40,7 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account, profile }) {
       const name = profile?.name || profile?.login;
       const githubId = account?.providerAccountId;
-      const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/callback/github`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`;
       const params = { name, githubId };
       try {
         axiosCaseConverter(axios);
