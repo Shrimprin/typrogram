@@ -13,7 +13,7 @@ cd ..
 
 echo '--- Setting up the frontend... ---'
 cd frontend
-npm install
+pnpm install
 
 echo '--- Setup completed!!! ---'
 cd ..

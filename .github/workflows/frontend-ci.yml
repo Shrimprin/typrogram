@@ -16,20 +16,27 @@ jobs:
         working-directory: frontend
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 23.10.0
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
         run: |
-          npm install
+          pnpm install
 
       - name: Run linter
         run: |
-          npm run lint
+          pnpm run lint
 
   test:
     runs-on: ubuntu-latest
@@ -38,17 +45,24 @@ jobs:
         working-directory: frontend
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 23.10.0
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Install dependencies
         run: |
-          npm install
+          pnpm install
 
       - name: Run tests
         run: |
-          npm run test
+          pnpm run test

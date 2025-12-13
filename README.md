@@ -31,6 +31,7 @@ https://github.com/user-attachments/assets/febb259b-5038-4707-b99a-945b0091bb2e
 
 - Ruby 3.4.2
 - Ruby on Rails 8.1.1
+- Bundler (package manager)
 - PostgreSQL
 - RSpec Rails 8.0.2 (testing)
 - RuboCop 1.81.7 (linting)
@@ -40,6 +41,7 @@ https://github.com/user-attachments/assets/febb259b-5038-4707-b99a-945b0091bb2e
 - Next.js 15.2.4
 - React 19.0.0
 - TypeScript 5.x
+- pnpm (package manager)
 - Auth.js 5.0.0-beta.27
 - Tailwind CSS v4
 - shadcn/ui (component library)
@@ -66,6 +68,7 @@ https://github.com/user-attachments/assets/febb259b-5038-4707-b99a-945b0091bb2e
 ### Frontend
 
 - Node.js 18.18+
+- pnpm
 
 ## Setup
 
@@ -145,7 +148,7 @@ bin/rails server
 
 # Frontend server (in a separate terminal, port 3000)
 cd frontend
-npm run dev
+pnpm run dev
 ```
 
 Access `http://localhost:3000` in your browser.
@@ -163,10 +166,10 @@ bundle exec rspec
 
 ```bash
 cd frontend
-npm run test
+pnpm run test
 
 # Run tests with coverage
-npm run test:coverage
+pnpm run test:coverage
 ```
 
 ## License
