@@ -14,7 +14,7 @@ type HeaderProps = {
 
 export default function Header({ title = '', moreComponent, backHref }: HeaderProps) {
   return (
-    <header className="bg-background flex h-16 w-full flex-shrink-0 items-center overflow-hidden border-b px-8">
+    <header className="flex h-16 w-full flex-shrink-0 items-center overflow-hidden border-b bg-background px-8">
       <Link
         href="/"
         className={`

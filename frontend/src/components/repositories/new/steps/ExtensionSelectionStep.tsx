@@ -65,7 +65,7 @@ export default function ExtensionSelectionStep({
           md:flex-row md:items-center md:justify-between md:space-y-0
         `}
       >
-        <div className="text-muted-foreground text-sm">
+        <div className="text-sm text-muted-foreground">
           {selectedExtensions.length} / {repositoryPreview.extensions.length} extensions selected ({selectedFiles} /{' '}
           {totalFiles} files)
         </div>
@@ -122,7 +122,7 @@ export default function ExtensionSelectionStep({
               <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{extension.name}</span>
-                  <span className="text-muted-foreground text-sm">{extension.fileCount ?? 0} files</span>
+                  <span className="text-sm text-muted-foreground">{extension.fileCount ?? 0} files</span>
                 </div>
               </div>
             </div>
@@ -132,9 +132,9 @@ export default function ExtensionSelectionStep({
 
       {repositoryPreview.extensions.length === 0 && (
         <Card className="p-8 text-center">
-          <File className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
+          <File className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="mb-2 font-medium">No files found</h3>
-          <p className="text-muted-foreground text-sm">This repository has no files.</p>
+          <p className="text-sm text-muted-foreground">This repository has no files.</p>
         </Card>
       )}
 

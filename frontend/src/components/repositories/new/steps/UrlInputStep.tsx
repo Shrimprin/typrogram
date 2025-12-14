@@ -86,7 +86,7 @@ export default function UrlInputStep({ initialUrl, isLoading, setIsLoading, onNe
         />
 
         {errorMessage && (
-          <div className="text-destructive text-sm whitespace-pre-line">
+          <div className="text-sm whitespace-pre-line text-destructive">
             <div className="inline-block text-left">{errorMessage}</div>
           </div>
         )}

@@ -35,8 +35,8 @@ export function SignOutSubmitButton() {
       type="submit"
       disabled={pending}
       className={`
-        hover:bg-accent
         flex w-full items-center gap-2 px-2 py-1.5 text-sm
+        hover:bg-accent
         disabled:cursor-not-allowed disabled:opacity-70
       `}
     >

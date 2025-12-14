@@ -12,7 +12,7 @@ export default function VideoPlayer({ videoSrc, thumbnailSrc, videoRef, altText 
     <div className="group relative mt-auto">
       <video
         ref={videoRef}
-        className="border-border/20 w-full rounded-sm border object-cover"
+        className="w-full rounded-sm border border-border/20 object-cover"
         muted
         loop
         playsInline

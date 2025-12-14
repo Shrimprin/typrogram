@@ -12,15 +12,15 @@ export default function CongratulationModal({ isOpen, onClose }: CongratulationM
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className={`
-          bg-background/30 border-secondary/40 ring-primary/20 max-w-sm border text-center
-          shadow-[0_0_20px_rgba(34,197,94,0.3)] ring-1 backdrop-blur-lg
+          max-w-sm border border-secondary/40 bg-background/30 text-center shadow-[0_0_20px_rgba(34,197,94,0.3)] ring-1
+          ring-primary/20 backdrop-blur-lg
         `}
         showCloseButton={true}
       >
         <DialogHeader className="space-y-6">
           <DialogTitle
             className={`
-              from-secondary to-primary bg-gradient-to-r bg-clip-text text-center text-2xl font-bold text-transparent
+              bg-gradient-to-r from-secondary to-primary bg-clip-text text-center text-2xl font-bold text-transparent
             `}
           >
             CONGRATULATIONS

@@ -10,29 +10,24 @@ export const metadata: Metadata = {
 export default function TermsOfService() {
   return (
     <PageLayout title="Terms of Service" backHref="/">
-      <div className="bg-background min-h-screen py-4">
+      <div className="min-h-screen bg-background py-4">
         <div
           className={`
             container mx-auto max-w-4xl px-0
             sm:px-8
           `}
         >
-          <div
-            className={`
-              bg-card/50 border-border/50 prose prose-slate max-w-none rounded-sm border p-8
-              dark:prose-invert
-            `}
-          >
+          <div className="max-w-none rounded-sm border border-border/50 bg-card/50 p-8">
             <p className="text-foreground">
               Thank you very much for using Typrogram (hereinafter, &quot;the Service&quot;). Users are kindly requested
               to follow the Terms of Use when using the Service.
             </p>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 1 (Application)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>These Terms of Use apply to all relationships between users and the Service.</li>
                 <li>
                   In addition to these Terms of Use, we may establish various rules and regulations (hereinafter,
@@ -47,10 +42,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 2 (User Registration)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   User registration will be completed when we approve an application for registration by an applicant.
                 </li>
@@ -67,7 +62,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 3 (Management of User ID and Password)
               </h2>
               <p className="text-foreground">
@@ -77,7 +72,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 4 (Usage Fees and Payment Methods)
               </h2>
               <p className="text-foreground">
@@ -86,13 +81,13 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 5 (Prohibited Acts)
               </h2>
-              <p className="text-foreground mb-2">
+              <p className="mb-2 text-foreground">
                 Users must not engage in the following acts when using the Service:
               </p>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>Acts that violate laws or public order and morals</li>
                 <li>Acts related to criminal activities</li>
                 <li>
@@ -120,10 +115,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 6 (Suspension of Service Provision)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   We may discontinue or halt the provision of the Service without prior notice to users if we judge it
                   is difficult to provide the Service in any of the following cases:
@@ -148,10 +143,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 7 (Restriction of Use and Deregistration)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   If a user falls under any of the following cases, we may restrict the user&apos;s use of the Service
                   or terminate the user&apos;s registration without prior notice:
@@ -171,7 +166,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 8 (Withdrawal)
               </h2>
               <p className="text-foreground">
@@ -180,10 +175,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 9 (Disclaimer of Warranties and Limitation of Liability)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   We do not guarantee that there are no factual or legal defects in the Service (including deficiencies
                   relating to safety, reliability, accuracy, integrity, efficacy, compatibility with specific purposes,
@@ -203,7 +198,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 10 (Changes in Service Content)
               </h2>
               <p className="text-foreground">
@@ -213,10 +208,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 11 (Changes to Terms of Use)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   We reserve the right to modify these Terms of Use without requiring individual user consent in the
                   following cases:
@@ -237,7 +232,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 12 (Handling of Personal Information)
               </h2>
               <p className="text-foreground">
@@ -247,7 +242,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 13 (Notice or Contact)
               </h2>
               <p className="text-foreground">
@@ -256,7 +251,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 14 (Prohibition of Assignment of Rights and Obligations)
               </h2>
               <p className="text-foreground">
@@ -266,10 +261,10 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 15 (Governing Law and Jurisdiction)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>The interpretation of these Terms of Use is governed by the laws of Japan.</li>
                 <li>
                   In the event of any disputes arising from the Service, the court having jurisdiction over the location
@@ -279,7 +274,7 @@ export default function TermsOfService() {
             </section>
 
             <section className="mt-8">
-              <div className="border-border/50 border-t pt-6">
+              <div className="border-t border-border/50 pt-6">
                 <p className="text-muted-foreground">Established on October 2025</p>
               </div>
             </section>

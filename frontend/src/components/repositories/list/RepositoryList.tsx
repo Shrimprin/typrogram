@@ -30,7 +30,7 @@ export default function RepositoryList({ repositories, pagination }: Props) {
               <FolderOpen className="mx-auto h-12 w-12" />
             </div>
             <h3 className="mb-2 text-lg font-medium">No repositories</h3>
-            <p className="text-muted-foreground mb-6 text-sm">Add a repository to start typing.</p>
+            <p className="mb-6 text-sm text-muted-foreground">Add a repository to start typing.</p>
             <Button variant="outline" asChild>
               <Link href="/repositories/new">
                 <Plus className="mr-2 h-4 w-4" />

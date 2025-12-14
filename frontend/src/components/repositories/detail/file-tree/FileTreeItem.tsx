@@ -48,8 +48,8 @@ export default function FileTreeItem({ fileItem, level, selectedFileItem, onSele
     <div style={{ marginLeft: `${level * 4}px` }}>
       <button
         className={`
-          hover:bg-accent
           flex w-full cursor-pointer items-center py-1
+          hover:bg-accent
         `}
         onClick={isDir ? toggleExpand : handleFileSelect}
       >
@@ -67,7 +67,7 @@ export default function FileTreeItem({ fileItem, level, selectedFileItem, onSele
               <Folder size={16} className="mr-1 flex-shrink-0" />
               <span className="truncate">{fileItem.name}</span>
             </div>
-            {isTyped && <Check size={16} className="text-secondary mr-2 ml-auto flex-shrink-0" />}
+            {isTyped && <Check size={16} className="mr-2 ml-auto flex-shrink-0 text-secondary" />}
           </>
         ) : (
           <>
@@ -82,13 +82,13 @@ export default function FileTreeItem({ fileItem, level, selectedFileItem, onSele
               <span className="truncate">{fileItem.name}</span>
             </div>
             {isTyped ? (
-              <Check size={16} className="text-secondary mr-2 ml-auto flex-shrink-0" />
+              <Check size={16} className="mr-2 ml-auto flex-shrink-0 text-secondary" />
             ) : isTyping ? (
               <div className="mr-2 ml-auto flex h-4 w-4 flex-shrink-0 items-center justify-center">
-                <div className="bg-muted-foreground h-2 w-2 rounded-full shadow-lg" />
+                <div className="h-2 w-2 rounded-full bg-muted-foreground shadow-lg" />
               </div>
             ) : isUnsupported ? (
-              <AlertTriangle size={16} className="text-muted-foreground mr-2 ml-auto flex-shrink-0" />
+              <AlertTriangle size={16} className="mr-2 ml-auto flex-shrink-0 text-muted-foreground" />
             ) : null}
           </>
         )}

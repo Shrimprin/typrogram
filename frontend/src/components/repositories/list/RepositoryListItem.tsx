@@ -25,7 +25,7 @@ export default function RepositoryListItem({ repository }: Props) {
         >
           <RepositoryProgress progress={repository.progress || 0} />
           {repository.lastTypedAt && (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               typed{' '}
               {formatDistanceToNow(new Date(repository.lastTypedAt), {
                 addSuffix: true,
