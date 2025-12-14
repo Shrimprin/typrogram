@@ -45,6 +45,10 @@ Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always
 
+# delegateは使用しない
+Rails/Delegate:
+  Enabled: false
+
 # exampleの行数をチェック
 RSpec/ExampleLength:
   Max: 30
