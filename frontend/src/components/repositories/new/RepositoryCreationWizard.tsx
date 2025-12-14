@@ -119,7 +119,7 @@ export default function RepositoryCreationWizard() {
                 <CardTitle className="break-words">{currentStepInfo.title}</CardTitle>
                 <CardDescription className="break-words">{currentStepInfo.description}</CardDescription>
               </div>
-              <div className="text-muted-foreground flex-shrink-0 text-sm">
+              <div className="flex-shrink-0 text-sm text-muted-foreground">
                 {currentStepIndex + 1} / {stepsInfo.length}
               </div>
             </div>

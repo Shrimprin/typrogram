@@ -92,7 +92,7 @@ export default function RepositoryPagination({ pagination }: Props) {
           <PaginationItem>
             <PaginationPrevious
               href={pagination.hasPrev ? createPageUrl(currentPage - 1) : '#'}
-              className={!pagination.hasPrev ? 'text-muted-foreground pointer-events-none' : ''}
+              className={!pagination.hasPrev ? 'pointer-events-none text-muted-foreground' : ''}
             />
           </PaginationItem>
 
@@ -101,7 +101,7 @@ export default function RepositoryPagination({ pagination }: Props) {
           <PaginationItem>
             <PaginationNext
               href={pagination.hasNext ? createPageUrl(currentPage + 1) : '#'}
-              className={!pagination.hasNext ? 'text-muted-foreground pointer-events-none' : ''}
+              className={!pagination.hasNext ? 'pointer-events-none text-muted-foreground' : ''}
             />
           </PaginationItem>
         </PaginationContent>

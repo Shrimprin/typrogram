@@ -40,6 +40,12 @@ export default tseslint.config(
       ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
       ...eslintPluginBetterTailwindcss.configs['recommended-error'].rules,
       'better-tailwindcss/enforce-consistent-line-wrapping': ['warn', { printWidth: 120 }],
+      'better-tailwindcss/no-unregistered-classes': [
+        'error',
+        {
+          ignore: ['toaster'], // sonner ライブラリが使用するクラス
+        },
+      ],
     },
     settings: {
       'better-tailwindcss': {

@@ -11,10 +11,10 @@ export default function RepositoryCard({ repositoryPreview }: RepositoryCardProp
   return (
     <Card className="p-4" variant="interactive">
       <a href={repositoryPreview.url} target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3">
-        <Github className="text-muted-foreground h-5 w-5" />
+        <Github className="h-5 w-5 text-muted-foreground" />
         <div>
           <span className="font-medium">{repositoryPreview.name}</span>
-          <p className="text-muted-foreground text-sm">{repositoryPreview.url}</p>
+          <p className="text-sm text-muted-foreground">{repositoryPreview.url}</p>
         </div>
       </a>
     </Card>

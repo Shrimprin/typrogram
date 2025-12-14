@@ -10,46 +10,41 @@ export const metadata: Metadata = {
 export default function PrivacyPolicy() {
   return (
     <PageLayout title="Privacy Policy" backHref="/">
-      <div className="bg-background min-h-screen py-4">
+      <div className="min-h-screen bg-background py-4">
         <div
           className={`
             container mx-auto max-w-4xl px-0
             sm:px-8
           `}
         >
-          <div
-            className={`
-              bg-card/50 border-border/50 prose prose-slate max-w-none rounded-sm border p-8
-              dark:prose-invert
-            `}
-          >
+          <div className="max-w-none rounded-sm border border-border/50 bg-card/50 p-8">
             <p className="text-foreground">
               This Privacy Policy (hereinafter, &quot;this Policy&quot;) describes how we handle users&apos; personal
               information in the service provided by Typrogram (hereinafter, &quot;the Service&quot;).
             </p>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 1 (Personal Information)
               </h2>
-              <p className="text-foreground mb-2">
+              <p className="mb-2 text-foreground">
                 When you register for and use the Service, we collect the following information and treat it as personal
                 information:
               </p>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>Information related to GitHub accounts</li>
                 <li>Other logs generated when accessing the Service</li>
               </ol>
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 2 (Purpose of Collecting and Using Personal Information)
               </h2>
-              <p className="text-foreground mb-2">
+              <p className="mb-2 text-foreground">
                 The purposes for which the Service collects and uses personal information are as follows:
               </p>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>To provide and operate the Service</li>
                 <li>To respond to inquiries from users (including identity verification)</li>
                 <li>To provide necessary notifications such as maintenance and important announcements</li>
@@ -63,10 +58,10 @@ export default function PrivacyPolicy() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 3 (Changes to Purpose of Use)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   We may change the purpose of use of personal information only if it is reasonably recognized that the
                   changed purpose is related to the purpose before the change.
@@ -79,10 +74,10 @@ export default function PrivacyPolicy() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 4 (Provision of Personal Information to Third Parties)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   We will not provide personal information to third parties without prior consent from users, except in
                   the following cases. However, this excludes cases permitted by the Personal Information Protection Act
@@ -127,10 +122,10 @@ export default function PrivacyPolicy() {
             </section>
 
             <section className="mt-8">
-              <h2 className="text-foreground border-primary/30 mb-4 border-b pb-2 text-2xl font-bold">
+              <h2 className="mb-4 border-b border-primary/30 pb-2 text-2xl font-bold text-foreground">
                 Article 5 (Changes to Privacy Policy)
               </h2>
-              <ol className="text-foreground list-decimal space-y-2 pl-6">
+              <ol className="list-decimal space-y-2 pl-6 text-foreground">
                 <li>
                   The contents of this Policy may be changed without notice to users, except for matters otherwise
                   provided by laws and regulations or this Policy.
@@ -143,7 +138,7 @@ export default function PrivacyPolicy() {
             </section>
 
             <section className="mt-8">
-              <div className="border-border/50 border-t pt-6">
+              <div className="border-t border-border/50 pt-6">
                 <p className="text-muted-foreground">Established on October 2025</p>
               </div>
             </section>

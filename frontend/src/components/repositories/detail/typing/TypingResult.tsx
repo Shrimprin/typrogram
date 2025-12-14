@@ -73,7 +73,7 @@ export default function TypingResult({ stats, targetTextLines, typedTextLines }:
           }}
         >
           {statItems.map((item, index) => (
-            <motion.div key={index} className="text-secondary flex flex-col items-center space-y-2" variants={fadeInUp}>
+            <motion.div key={index} className="flex flex-col items-center space-y-2 text-secondary" variants={fadeInUp}>
               <dt>{item.label}</dt>
               <dd className="text-2xl font-bold">{item.value}</dd>
             </motion.div>
@@ -86,7 +86,7 @@ export default function TypingResult({ stats, targetTextLines, typedTextLines }:
           Typed Code
         </motion.h2>
 
-        <motion.div className="bg-muted/20 rounded-lg border" {...fadeInUp} transition={{ duration: 0.5, delay: 1.3 }}>
+        <motion.div className="rounded-lg border bg-muted/20" {...fadeInUp} transition={{ duration: 0.5, delay: 1.3 }}>
           <div className="overflow-x-auto p-4">
             <div className="min-w-fit">
               <motion.div

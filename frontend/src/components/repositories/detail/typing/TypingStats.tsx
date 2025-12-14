@@ -10,7 +10,7 @@ export default function TypingStats({ stats }: TypingStatsProps) {
   const { accuracy, elapsedSeconds, totalTypoCount, wpm } = stats;
 
   return (
-    <div className="bg-background/80 absolute right-4 bottom-4 rounded-lg border px-3 py-2 text-sm backdrop-blur-sm">
+    <div className="absolute right-4 bottom-4 rounded-lg border bg-background/80 px-3 py-2 text-sm backdrop-blur-sm">
       <div className="flex min-w-[140px] flex-col gap-1">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Accuracy:</span>

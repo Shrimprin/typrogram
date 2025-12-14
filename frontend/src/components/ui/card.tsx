@@ -3,25 +3,25 @@ import * as React from 'react';
 
 import { cn } from '@/libs/shadcn/utils';
 
-const cardVariants = cva('bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm', {
+const cardVariants = cva('flex flex-col gap-6 rounded-xl border bg-card py-6 text-card-foreground shadow-sm', {
   variants: {
     variant: {
       default: '',
       outline: `
-        bg-background border-border border shadow-xs transition-all
-        hover:bg-accent/20 hover:text-accent-foreground hover:border-accent
+        border border-border bg-background shadow-xs transition-all
+        hover:border-accent hover:bg-accent/20 hover:text-accent-foreground
         hover:shadow-[0_0_15px_rgba(255,255,255,0.8),0_0_30px_rgba(255,255,255,0.4)]
-        dark:bg-input/30 dark:border-border dark:hover:bg-input/50
+        dark:border-border dark:bg-input/30 dark:hover:bg-input/50
       `,
       interactive: `
-        hover:bg-accent/20 hover:text-accent-foreground hover:border-accent
+        cursor-pointer transition-all
+        hover:border-accent hover:bg-accent/20 hover:text-accent-foreground
         hover:shadow-[0_0_15px_rgba(255,255,255,0.8),0_0_30px_rgba(255,255,255,0.4)]
         dark:hover:bg-accent/50
-        cursor-pointer transition-all
       `,
       selectedInteractive: `
-        border-primary bg-primary/5 cursor-pointer transition-all
-        hover:bg-primary/8 hover:border-primary/80
+        cursor-pointer border-primary bg-primary/5 transition-all
+        hover:border-primary/80 hover:bg-primary/8
         hover:shadow-[0_0_15px_rgba(59,130,246,0.6),0_0_30px_rgba(59,130,246,0.3)]
         dark:hover:shadow-[0_0_15px_rgba(96,165,250,0.6),0_0_30px_rgba(96,165,250,0.3)]
       `,
@@ -58,7 +58,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div data-slot="card-description" className={cn('text-muted-foreground text-sm', className)} {...props} />;
+  return <div data-slot="card-description" className={cn('text-sm text-muted-foreground', className)} {...props} />;
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<'div'>) {

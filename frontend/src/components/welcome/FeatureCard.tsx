@@ -43,7 +43,7 @@ export default function FeatureCard({
   return (
     <div
       className={`
-        group border-border/50 bg-card/50 flex flex-col rounded-sm border p-8 transition-all duration-300
+        group flex flex-col rounded-sm border border-border/50 bg-card/50 p-8 transition-all duration-300
         ${borderColor}
       `}
       onMouseEnter={() => handleCardHover(true)}
@@ -67,10 +67,10 @@ export default function FeatureCard({
         </div>
         <div className="flex items-center gap-3">
           {icon}
-          <h3 className="text-foreground text-2xl font-bold">{title}</h3>
+          <h3 className="text-2xl font-bold text-foreground">{title}</h3>
         </div>
       </div>
-      <p className="text-foreground mb-4">{description}</p>
+      <p className="mb-4 text-foreground">{description}</p>
       <VideoPlayer
         videoSrc={videoSrc}
         thumbnailSrc={thumbnailSrc}
