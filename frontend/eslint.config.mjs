@@ -4,8 +4,7 @@ import { fileURLToPath } from 'url';
 
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
-
-import eslintPluginReadableTailwind from 'eslint-plugin-readable-tailwind';
+import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import tseslint from 'typescript-eslint';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,12 +34,17 @@ export default tseslint.config(
       },
     },
     plugins: {
-      'readable-tailwind': eslintPluginReadableTailwind,
+      'better-tailwindcss': eslintPluginBetterTailwindcss,
     },
     rules: {
-      ...eslintPluginReadableTailwind.configs.warning.rules,
-      ...eslintPluginReadableTailwind.configs.error.rules,
-      'readable-tailwind/multiline': ['warn', { printWidth: 120 }],
+      ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
+      ...eslintPluginBetterTailwindcss.configs['recommended-error'].rules,
+      'better-tailwindcss/enforce-consistent-line-wrapping': ['warn', { printWidth: 120 }],
+    },
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'src/app/globals.css',
+      },
     },
   },
   eslintConfigPrettier,
