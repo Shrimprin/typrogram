@@ -22,17 +22,21 @@ class API::RepositoriesController < ApplicationController
       return
     end
 
-    client = Octokit::Client.new(access_token: ENV.fetch('GITHUB_ACCESS_TOKEN'))
-    repository = build_repository(client, repository_url)
+    github_client = GithubClient.new
 
-    if repository.save_with_file_items(client)
+    unless github_client.repository?(repository_url)
+      render json: { message: 'Repository not found.' }, status: :not_found
+      return
+    end
+
+    extensions_attributes = repository_params[:extensions_attributes] || []
+    repository = github_client.build_repository(@current_user, repository_url, extensions_attributes)
+
+    if repository.save_with_file_items(github_client)
       render json: RepositorySerializer.new(repository), status: :created
     else
       render json: { errors: repository.errors }, status: :unprocessable_content
     end
-  rescue Octokit::NotFound => e
-    LogUtils.log_warn(e, 'RepositoriesController#create')
-    render json: { message: 'Repository not found.' }, status: :not_found
   rescue Octokit::TooManyRequests => e
     LogUtils.log_warn(e, 'RepositoriesController#create')
     render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
@@ -63,20 +67,5 @@ class API::RepositoriesController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     LogUtils.log_warn(e, 'RepositoriesController#set_repository')
     render json: { message: 'Repository not found.' }, status: :not_found
-  end
-
-  def build_repository(client, repository_url)
-    repository_info = client.repository(repository_url)
-    repository_name = repository_info.name
-    latest_commit = client.commits(repository_url).first
-    commit_hash = latest_commit.sha
-
-    Repository.new(
-      user: @current_user,
-      name: repository_name,
-      url: repository_url,
-      commit_hash:,
-      extensions_attributes: repository_params[:extensions_attributes] || []
-    )
   end
 end

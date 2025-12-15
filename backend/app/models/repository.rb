@@ -25,9 +25,9 @@ class Repository < ApplicationRecord
     end
   end
 
-  def save_with_file_items(client)
+  def save_with_file_items(github_client)
     transaction do
-      is_saved = save && save_file_items(client)
+      is_saved = save && save_file_items(github_client)
       raise ActiveRecord::Rollback unless is_saved
 
       true
@@ -43,8 +43,8 @@ class Repository < ApplicationRecord
 
   private
 
-  def save_file_items(client)
-    file_tree_data = client.tree(url, commit_hash, recursive: true)
+  def save_file_items(github_client)
+    file_tree_data = github_client.file_tree(url)
     file_tree_grouped_by_depth = file_tree_data.tree.group_by { |node| depth_of(node.path) }
     filtered_file_tree = filter_file_tree_by_valid_extensions(file_tree_grouped_by_depth)
     create_file_items_recursively(filtered_file_tree)
