@@ -22,6 +22,10 @@ class GithubClient
     }
   end
 
+  def file_content(repository_url, file_path, commit_hash)
+    @client.contents(repository_url, path: file_path, ref: commit_hash)[:content]
+  end
+
   def file_tree(repository_url)
     latest_commit_hash = latest_commit_hash(repository_url)
     @client.tree(repository_url, latest_commit_hash, recursive: true)

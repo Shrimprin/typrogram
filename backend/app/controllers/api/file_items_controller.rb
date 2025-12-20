@@ -5,11 +5,14 @@ class API::FileItemsController < ApplicationController
   before_action :set_file_item, only: %i[show update]
 
   def show
-    fetch_file_content_and_update_parent_status
-    render json: FileItemSerializer.new(
-      @file_item,
-      params: { content: true, typing_progress: true, children: true }
-    ), status: :ok
+    if @file_item.fetch_file_content_and_update_parent_status
+      render json: FileItemSerializer.new(
+        @file_item,
+        params: { content: true, typing_progress: true, children: true }
+      ), status: :ok
+    else
+      render json: { errors: @file_item.errors }, status: :unprocessable_content
+    end
   rescue Octokit::TooManyRequests => e
     LogUtils.log_warn(e, 'FileItemsController#show')
     render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
@@ -25,7 +28,7 @@ class API::FileItemsController < ApplicationController
     case file_item_params[:status]
     when 'typed'
       if @file_item.update_with_parent(file_item_params) && @repository.update(last_typed_at: Time.zone.now)
-        render json: typed_file_items_response, status: :ok
+        render json: RepositorySerializer.new(@repository, params: { file_items: true, progress: true }), status: :ok
       else
         render json: { errors: @file_item.errors }, status: :unprocessable_content
       end
@@ -63,33 +66,5 @@ class API::FileItemsController < ApplicationController
   rescue ActiveRecord::RecordNotFound => e
     LogUtils.log_warn(e, 'FileItemsController#set_file_item')
     render json: { message: 'File not found.' }, status: :not_found
-  end
-
-  def fetch_file_content_and_update_parent_status
-    return if @file_item.content.present? || @file_item.dir?
-
-    file_content = fetch_file_content
-    return unless file_content
-
-    decoded_content = FileItem.decode_file_content(file_content)
-    update_file_item_with_parent_status(decoded_content)
-  end
-
-  def fetch_file_content
-    client = Octokit::Client.new(access_token: ENV.fetch('GITHUB_ACCESS_TOKEN'))
-    client.contents(@repository.url, path: @file_item.path, ref: @repository.commit_hash)[:content]
-  end
-
-  def update_file_item_with_parent_status(decoded_content)
-    update_params = { content: decoded_content }
-    update_params[:status] = :unsupported if FileItem.contains_non_ascii?(decoded_content)
-
-    return unless @file_item.update(update_params)
-
-    @file_item.update_parent_status
-  end
-
-  def typed_file_items_response
-    RepositorySerializer.new(@repository, params: { file_items: true, progress: true })
   end
 end

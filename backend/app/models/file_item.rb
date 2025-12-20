@@ -21,27 +21,21 @@ class FileItem < ApplicationRecord
     unsupported: 3
   }
 
-  def self.contains_non_ascii?(file_content)
-    return false if file_content.blank?
-
-    # ASCII文字以外（英数字、記号、空白文字以外）が含まれているかチェック
-    file_content.match?(/[^\x00-\x7F]/)
-  end
-
-  def self.decode_file_content(file_content)
-    decoded_file_content = Base64.decode64(file_content).force_encoding('UTF-8')
-
-    # UTF-8エンコーディングの確認と修正
-    unless decoded_file_content.valid_encoding?
-      decoded_file_content = decoded_file_content.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
-    end
-
-    # nullバイトを削除
-    decoded_file_content.delete("\0")
-  end
-
   def full_path
     "#{repository.name}/#{path}"
+  end
+
+  def fetch_file_content_and_update_parent_status
+    return true if content.present? || dir?
+
+    github_client = GithubClient.new
+    file_content = github_client.file_content(repository.url, path, repository.commit_hash)
+    return true unless file_content
+
+    decoded_content = decode_file_content(file_content)
+    update_params = { content: decoded_content }
+    update_params[:status] = :unsupported if contains_non_ascii?(decoded_content)
+    update_with_parent(update_params)
   end
 
   def update_parent_status
@@ -75,7 +69,7 @@ class FileItem < ApplicationRecord
   private
 
   def save_typing_progress(params)
-    return nil if params[:typing_progress].blank?
+    return true if params[:typing_progress].blank?
 
     typing_progress_params = params[:typing_progress].except(:typos)
     typos_params = params[:typing_progress][:typos]
@@ -99,5 +93,24 @@ class FileItem < ApplicationRecord
     failed_typing_progress.errors.each do |error|
       errors.add("typing_progress.#{error.attribute}", error.message)
     end
+  end
+
+  def contains_non_ascii?(file_content)
+    return false if file_content.blank?
+
+    # ASCII文字以外（英数字、記号、空白文字以外）が含まれているかチェック
+    file_content.match?(/[^\x00-\x7F]/)
+  end
+
+  def decode_file_content(file_content)
+    decoded_file_content = Base64.decode64(file_content).force_encoding('UTF-8')
+
+    # UTF-8エンコーディングの確認と修正
+    unless decoded_file_content.valid_encoding?
+      decoded_file_content = decoded_file_content.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
+    end
+
+    # nullバイトを削除
+    decoded_file_content.delete("\0")
   end
 end
