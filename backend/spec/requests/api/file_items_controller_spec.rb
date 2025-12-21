@@ -160,6 +160,26 @@ RSpec.describe API::FileItemsController, type: :request do
       end
     end
 
+    context 'when update failed' do
+      before do
+        github_client_mock = instance_double(Octokit::Client)
+        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        content = Base64.strict_encode64('Hello, World!')
+        allow(github_client_mock)
+          .to receive(:contents)
+          .with(repository.url, path: nil_content_file_item.path, ref: repository.commit_hash)
+          .and_return({ content: })
+
+        allow_any_instance_of(FileItem).to receive(:fetch_file_content_and_update_parent_status).and_return(false) # rubocop:disable RSpec/AnyInstance
+
+        get_nil_content_file_item
+      end
+
+      it 'returns unprocessable content status' do
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+
     context 'when too many requests' do
       before do
         github_client_mock = instance_double(Octokit::Client)
