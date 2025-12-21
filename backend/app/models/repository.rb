@@ -94,8 +94,7 @@ class Repository < ApplicationRecord
 
   def build_file_items(nodes, parent_file_item)
     nodes.map do |node|
-      FileItem.new(
-        repository: self,
+      file_items.build(
         parent: parent_file_item,
         name: File.basename(node.path),
         path: node.path,
