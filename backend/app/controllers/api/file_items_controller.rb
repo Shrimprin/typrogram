@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class API::FileItemsController < ApplicationController
-  before_action :set_repository, only: %i[show update]
-  before_action :set_file_item, only: %i[show update]
+  before_action :set_repository, :set_file_item
 
   def show
     if @file_item.fetch_file_content_and_update_parent_status
