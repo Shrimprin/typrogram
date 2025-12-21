@@ -26,13 +26,13 @@ class API::FileItemsController < ApplicationController
   def update
     case file_item_params[:status]
     when 'typed'
-      if @file_item.update_with_parent(file_item_params) && @repository.update(last_typed_at: Time.zone.now)
+      if @file_item.update_with_parent(file_item_params, is_timestamp: true)
         render json: RepositorySerializer.new(@repository, params: { file_items: true, progress: true }), status: :ok
       else
         render json: { errors: @file_item.errors }, status: :unprocessable_content
       end
     when 'typing'
-      if @file_item.update_with_typing_progress(file_item_params) && @repository.update(last_typed_at: Time.zone.now)
+      if @file_item.update_with_typing_progress(file_item_params, is_timestamp: true)
         render json: FileItemSerializer.new(@file_item, params: { children: true }), status: :ok
       else
         render json: { errors: @file_item.errors }, status: :unprocessable_content

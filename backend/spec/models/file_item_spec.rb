@@ -236,11 +236,11 @@ RSpec.describe FileItem, type: :model do
       end
 
       it 'returns nil' do
-        expect(untyped_file_item.update_with_parent(status: :typed)).to be_nil
+        expect(untyped_file_item.update_with_parent({ status: :typed })).to be_nil
       end
 
       it 'does not update both file item and parent status' do
-        untyped_file_item.update_with_parent(status: :typed)
+        untyped_file_item.update_with_parent({ status: :typed })
 
         expect(untyped_file_item.status).to eq('untyped')
         expect(parent_dir.status).to eq('untyped')
@@ -261,6 +261,22 @@ RSpec.describe FileItem, type: :model do
 
         expect(untyped_file_item.reload.status).to eq('untyped')
         expect(parent_dir.status).to eq('untyped')
+      end
+    end
+
+    context 'when is_timestamp is true' do
+      it 'updates repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_parent(valid_params, is_timestamp: true)
+        end.to(change(repository, :last_typed_at))
+      end
+    end
+
+    context 'when is_timestamp is false' do
+      it 'does not update repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_parent(valid_params, is_timestamp: false)
+        end.not_to(change(repository, :last_typed_at))
       end
     end
   end
@@ -358,6 +374,22 @@ RSpec.describe FileItem, type: :model do
       end
 
       it_behaves_like 'does not update file item status and typing progress'
+    end
+
+    context 'when is_timestamp is true' do
+      it 'updates repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_typing_progress(valid_params, is_timestamp: true)
+        end.to(change(repository, :last_typed_at))
+      end
+    end
+
+    context 'when is_timestamp is false' do
+      it 'does not update repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_typing_progress(valid_params, is_timestamp: false)
+        end.not_to(change(repository, :last_typed_at))
+      end
     end
   end
 

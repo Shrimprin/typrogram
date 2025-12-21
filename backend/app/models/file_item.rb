@@ -48,18 +48,19 @@ class FileItem < ApplicationRecord
     parent.update(status: :typed) && parent.update_parent_status
   end
 
-  def update_with_parent(params)
+  def update_with_parent(params, is_timestamp: false)
     transaction do
-      is_updated = update_with_typing_progress(params) && update_parent_status
+      is_updated = update_with_typing_progress(params, is_timestamp:) && update_parent_status
       raise ActiveRecord::Rollback unless is_updated
 
       true
     end
   end
 
-  def update_with_typing_progress(params)
+  def update_with_typing_progress(params, is_timestamp: false)
     transaction do
       is_updated = update(params.except(:typing_progress)) && save_typing_progress(params)
+      is_updated &&= repository.update(last_typed_at: Time.zone.now) if is_timestamp
       raise ActiveRecord::Rollback unless is_updated
 
       true
