@@ -60,7 +60,7 @@ class FileItem < ApplicationRecord
   def update_with_typing_progress(params, is_timestamp: false)
     transaction do
       is_updated = update(params.except(:typing_progress)) && save_typing_progress(params)
-      is_updated &&= repository.update(last_typed_at: Time.zone.now) if is_timestamp
+      is_updated &&= repository.update(last_typed_at: Time.zone.now) if is_timestamp # touchはバリデーションを無視するためupdate
       raise ActiveRecord::Rollback unless is_updated
 
       true
