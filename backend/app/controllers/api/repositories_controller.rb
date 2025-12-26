@@ -15,7 +15,7 @@ class API::RepositoriesController < ApplicationController
 
   def create
     url = repository_params[:url]
-    repository_url = UrlUtils.extract_github_repository_path(url)
+    repository_url = GithubUrl.extract_repository_path(url)
 
     if repository_url.nil?
       render json: { message: 'Invalid URL.' }, status: :unprocessable_content

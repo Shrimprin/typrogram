@@ -3,7 +3,7 @@
 class API::Repositories::PreviewsController < ApplicationController
   def show
     url = params[:repository_preview][:url]
-    repository_url = UrlUtils.extract_github_repository_path(url)
+    repository_url = GithubUrl.extract_repository_path(url)
 
     if repository_url.nil?
       render json: { message: 'Invalid URL.' }, status: :unprocessable_content
