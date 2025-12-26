@@ -10,15 +10,11 @@ class ApplicationController < ActionController::API
   def authenticate_request!
     header = request.headers['Authorization']
     token = header.split.last if header
-    decoded_token = JsonWebToken.decode(token)
+    decoded_token = JsonWebToken.decode(token) || {}
 
-    if decoded_token
-      @current_user = User.find(decoded_token[:user_id])
-    else
-      render json: { message: 'Please login.' }, status: :unauthorized
-    end
-  rescue ActiveRecord::RecordNotFound, JWT::DecodeError => e
-    LogUtils.log_warn(e, 'ApplicationController#authenticate_request!')
+    @current_user = User.find_by(id: decoded_token[:user_id])
+    return if @current_user
+
     render json: { message: 'Please login.' }, status: :unauthorized
   end
 end

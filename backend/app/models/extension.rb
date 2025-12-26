@@ -9,18 +9,22 @@ class Extension < ApplicationRecord
 
   NO_EXTENSION_NAME = 'no extension'
 
-  def self.extract_extension_name(path)
-    basename = File.basename(path)
-    basename.start_with?('.') ? extract_extension_from_dotfile(basename) : extract_full_extension(basename)
-  end
+  class << self
+    def extract_extension_name(path)
+      basename = File.basename(path)
+      basename.start_with?('.') ? extract_extension_from_dotfile(basename) : extract_full_extension(basename)
+    end
 
-  def self.extract_full_extension(basename)
-    parts = basename.split('.')
-    parts.length <= 1 ? NO_EXTENSION_NAME : ".#{parts[1..].join('.')}"
-  end
+    private
 
-  def self.extract_extension_from_dotfile(basename)
-    extension_name = File.extname(basename)
-    extension_name.empty? ? basename : extension_name
+    def extract_full_extension(basename)
+      parts = basename.split('.')
+      parts.length <= 1 ? NO_EXTENSION_NAME : ".#{parts[1..].join('.')}"
+    end
+
+    def extract_extension_from_dotfile(basename)
+      extension_name = File.extname(basename)
+      extension_name.empty? ? basename : extension_name
+    end
   end
 end

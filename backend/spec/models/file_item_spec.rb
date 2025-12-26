@@ -101,48 +101,6 @@ RSpec.describe FileItem, type: :model do
     end
   end
 
-  describe '.decode_file_content' do
-    it 'correctly decodes Base64 text' do
-      base64_text = '44GT44KT44Gr44Gh44Gv44CB5LiW55WM77yB'
-      decoded_text = described_class.decode_file_content(base64_text)
-
-      expect(decoded_text).to eq('こんにちは、世界！')
-      expect(decoded_text.encoding.name).to eq('UTF-8')
-    end
-
-    it 'handles invalid UTF-8 encoding' do
-      # 無効なUTF-8シーケンスを含むBase64エンコードされたテキスト
-      invalid_bytes = [0xFF, 0xFE, 0xFD].pack('C*') + 'こんにちは、世界！'.dup.force_encoding('ASCII-8BIT')
-      invalid_base64_text = Base64.strict_encode64(invalid_bytes)
-      decoded_text = described_class.decode_file_content(invalid_base64_text)
-
-      expect(decoded_text).to include('こんにちは、世界！')
-      expect(decoded_text.encoding.name).to eq('UTF-8')
-      expect(decoded_text.valid_encoding?).to be true
-    end
-  end
-
-  describe '.contains_non_ascii?' do
-    context 'when content is blank' do
-      it 'returns false' do
-        expect(described_class.contains_non_ascii?(nil)).to be false
-        expect(described_class.contains_non_ascii?('')).to be false
-      end
-    end
-
-    context 'when content contains only ASCII characters' do
-      it 'returns false' do
-        expect(described_class.contains_non_ascii?('Hello, World!')).to be false
-      end
-    end
-
-    context 'when content contains non-ASCII characters' do
-      it 'returns true' do
-        expect(described_class.contains_non_ascii?('こんにちは、世界！')).to be true
-      end
-    end
-  end
-
   describe '#full_path' do
     let(:root_dir) { create(:file_item, :directory, name: 'root_dir', repository:) }
     let(:middle_dir) { create(:file_item, :directory, name: 'middle_dir', repository:, parent: root_dir) }
@@ -150,6 +108,90 @@ RSpec.describe FileItem, type: :model do
 
     it 'returns the full path' do
       expect(file_item.full_path).to eq('test_repo/root_dir/middle_dir/test_file.rb')
+    end
+  end
+
+  describe '#fetch_file_content_and_update_parent_status' do
+    let(:nil_content_file_item) { create(:file_item, :nil_content, repository:, parent: parent_dir) }
+
+    context 'when content is present' do
+      it 'returns true' do
+        expect(untyped_file_item.fetch_file_content_and_update_parent_status).to be true
+      end
+    end
+
+    context 'when file type is directory' do
+      it 'returns true' do
+        expect(parent_dir.fetch_file_content_and_update_parent_status).to be true
+      end
+    end
+
+    context 'when fetched content is not present' do
+      before do
+        github_client_mock = instance_double(Octokit::Client)
+        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        allow(github_client_mock)
+          .to receive(:contents)
+          .with(repository.url, path: nil_content_file_item.path, ref: repository.commit_hash)
+          .and_return({ content: nil })
+      end
+
+      it 'returns true' do
+        expect(nil_content_file_item.fetch_file_content_and_update_parent_status).to be true
+      end
+    end
+
+    context 'when fetched content is non-ASCII' do
+      before do
+        github_client_mock = instance_double(Octokit::Client)
+        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        content = Base64.strict_encode64('こんにちは、世界！')
+        allow(github_client_mock)
+          .to receive(:contents)
+          .with(repository.url, path: nil_content_file_item.path, ref: repository.commit_hash)
+          .and_return({ content: })
+      end
+
+      it 'updates file item' do
+        expect(nil_content_file_item.status).to eq('untyped')
+        expect(nil_content_file_item.content).to be_nil
+
+        nil_content_file_item.fetch_file_content_and_update_parent_status
+        expect(nil_content_file_item.status).to eq('unsupported')
+        expect(nil_content_file_item.content).to eq('こんにちは、世界！')
+      end
+
+      it 'updates parent directory to typed' do
+        expect(parent_dir.status).to eq('untyped')
+
+        nil_content_file_item.fetch_file_content_and_update_parent_status
+        expect(parent_dir.status).to eq('typed')
+      end
+    end
+
+    context 'when fetched content is ASCII' do
+      before do
+        github_client_mock = instance_double(Octokit::Client)
+        allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        content = Base64.strict_encode64('Hello, World!')
+        allow(github_client_mock)
+          .to receive(:contents)
+          .with(repository.url, path: nil_content_file_item.path, ref: repository.commit_hash)
+          .and_return({ content: })
+      end
+
+      it 'updates file item' do
+        expect(nil_content_file_item.content).to be_nil
+
+        nil_content_file_item.fetch_file_content_and_update_parent_status
+        expect(nil_content_file_item.status).to eq('untyped')
+        expect(nil_content_file_item.content).to eq('Hello, World!')
+      end
+
+      it 'does not update parent directory' do
+        nil_content_file_item.fetch_file_content_and_update_parent_status
+        expect(parent_dir.status).to eq('untyped')
+      end
     end
   end
 
@@ -194,11 +236,11 @@ RSpec.describe FileItem, type: :model do
       end
 
       it 'returns nil' do
-        expect(untyped_file_item.update_with_parent(status: :typed)).to be_nil
+        expect(untyped_file_item.update_with_parent({ status: :typed })).to be_nil
       end
 
       it 'does not update both file item and parent status' do
-        untyped_file_item.update_with_parent(status: :typed)
+        untyped_file_item.update_with_parent({ status: :typed })
 
         expect(untyped_file_item.status).to eq('untyped')
         expect(parent_dir.status).to eq('untyped')
@@ -219,6 +261,22 @@ RSpec.describe FileItem, type: :model do
 
         expect(untyped_file_item.reload.status).to eq('untyped')
         expect(parent_dir.status).to eq('untyped')
+      end
+    end
+
+    context 'when is_timestamp is true' do
+      it 'updates repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_parent(valid_params, is_timestamp: true)
+        end.to(change(repository, :last_typed_at))
+      end
+    end
+
+    context 'when is_timestamp is false' do
+      it 'does not update repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_parent(valid_params, is_timestamp: false)
+        end.not_to(change(repository, :last_typed_at))
       end
     end
   end
@@ -316,6 +374,22 @@ RSpec.describe FileItem, type: :model do
       end
 
       it_behaves_like 'does not update file item status and typing progress'
+    end
+
+    context 'when is_timestamp is true' do
+      it 'updates repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_typing_progress(valid_params, is_timestamp: true)
+        end.to(change(repository, :last_typed_at))
+      end
+    end
+
+    context 'when is_timestamp is false' do
+      it 'does not update repository last_typed_at' do
+        expect do
+          untyped_file_item.update_with_typing_progress(valid_params, is_timestamp: false)
+        end.not_to(change(repository, :last_typed_at))
+      end
     end
   end
 
@@ -447,6 +521,52 @@ RSpec.describe FileItem, type: :model do
         expect(errors[:'typing_progress.typos.column']).to include("can't be blank")
         expect(errors[:'typing_progress.typos.character']).to include("can't be blank")
       end
+    end
+  end
+
+  describe '#contains_non_ascii?' do
+    let(:file_item) { create(:file_item, repository:) }
+
+    context 'when content is blank' do
+      it 'returns false' do
+        expect(file_item.send(:contains_non_ascii?, nil)).to be false
+        expect(file_item.send(:contains_non_ascii?, '')).to be false
+      end
+    end
+
+    context 'when content contains only ASCII characters' do
+      it 'returns false' do
+        expect(file_item.send(:contains_non_ascii?, 'Hello, World!')).to be false
+      end
+    end
+
+    context 'when content contains non-ASCII characters' do
+      it 'returns true' do
+        expect(file_item.send(:contains_non_ascii?, 'こんにちは、世界！')).to be true
+      end
+    end
+  end
+
+  describe '#decode_file_content' do
+    let(:file_item) { create(:file_item, repository:) }
+
+    it 'correctly decodes Base64 text' do
+      base64_text = '44GT44KT44Gr44Gh44Gv44CB5LiW55WM77yB'
+      decoded_text = file_item.send(:decode_file_content, base64_text)
+
+      expect(decoded_text).to eq('こんにちは、世界！')
+      expect(decoded_text.encoding.name).to eq('UTF-8')
+    end
+
+    it 'handles invalid UTF-8 encoding' do
+      # 無効なUTF-8シーケンスを含むBase64エンコードされたテキスト
+      invalid_bytes = [0xFF, 0xFE, 0xFD].pack('C*') + 'こんにちは、世界！'.dup.force_encoding('ASCII-8BIT')
+      invalid_base64_text = Base64.strict_encode64(invalid_bytes)
+      decoded_text = file_item.send(:decode_file_content, invalid_base64_text)
+
+      expect(decoded_text).to include('こんにちは、世界！')
+      expect(decoded_text.encoding.name).to eq('UTF-8')
+      expect(decoded_text.valid_encoding?).to be true
     end
   end
 end
