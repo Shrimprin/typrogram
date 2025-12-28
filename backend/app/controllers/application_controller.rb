@@ -37,7 +37,7 @@ class ApplicationController < ActionController::API
     render json: { message: 'An error occurred. Please try again later.' }, status: :too_many_requests
   end
 
-  #  管理者側で設定るするアクセストークンの有効期限が切れている場合はシステムエラーとする
+  #  管理者側で設定するアクセストークンの有効期限が切れている場合はシステムエラーとする
   def handle_unauthorized(exception)
     logger.error exception.full_message
     render json: { message: 'An error occurred. Please try again later.' }, status: :unauthorized

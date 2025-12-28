@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe GithubUrl do
   describe '.extract_repository_path' do
-    context 'when url is invalid' do
+    context 'when url is valid' do
       it 'returns repository path' do
         url = 'https://github.com/shrimprin/typrogram'
         expect(described_class.extract_repository_path(url)).to eq('shrimprin/typrogram')
