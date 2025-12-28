@@ -64,11 +64,11 @@ RSpec.describe TypingProgress, type: :model do
 
     context 'when save_typos failed' do
       before do
-        allow(typing_progress).to receive(:save_typos).and_return(nil)
+        allow(typing_progress).to receive(:save_typos).and_return(false)
       end
 
-      it 'returns nil' do
-        expect(typing_progress.save_with_typos(valid_typos_params)).to be_nil
+      it 'returns false' do
+        expect(typing_progress.save_with_typos(valid_typos_params)).to be false
       end
 
       it 'rolls back the transaction and does not create a typing_progress' do
