@@ -1,3 +1,4 @@
 .eslintrc.json
 next.config.mjs
 tsconfig.json
+pnpm-lock.yaml
