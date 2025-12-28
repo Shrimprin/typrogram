@@ -20,14 +20,5 @@ class API::Repositories::PreviewsController < ApplicationController
     repository_preview_data = github_client.build_repository_preview_data(repository_url)
 
     render json: repository_preview_data, status: :ok
-  rescue Octokit::TooManyRequests => e
-    LogUtils.log_warn(e, 'API::Repositories::PreviewsController#show')
-    render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
-  rescue Octokit::Unauthorized => e
-    LogUtils.log_error(e, 'API::Repositories::PreviewsController#show')
-    render json: { message: 'Invalid access token.' }, status: :unauthorized
-  rescue StandardError => e
-    LogUtils.log_error(e, 'API::Repositories::PreviewsController#show')
-    render json: { message: 'An error occurred. Please try again later.' }, status: :internal_server_error
   end
 end

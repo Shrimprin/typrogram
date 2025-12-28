@@ -12,7 +12,7 @@ class JsonWebToken
       ActiveSupport::HashWithIndifferentAccess.new(decoded)
     rescue JWT::DecodeError => e
       # トークンの有効切れの際はnilを返す
-      LogUtils.log_error(e, 'JsonWebToken.decode')
+      Rails.logger.error e.full_message
       nil
     end
   end

@@ -12,15 +12,6 @@ class API::FileItemsController < ApplicationController
     else
       render json: { errors: @file_item.errors }, status: :unprocessable_content
     end
-  rescue Octokit::TooManyRequests => e
-    LogUtils.log_warn(e, 'FileItemsController#show')
-    render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
-  rescue Octokit::Unauthorized => e
-    LogUtils.log_error(e, 'FileItemsController#show')
-    render json: { message: 'Invalid access token.' }, status: :unauthorized
-  rescue StandardError => e
-    LogUtils.log_error(e, 'FileItemsController#show')
-    render json: { message: 'An error occurred. Please try again later.' }, status: :internal_server_error
   end
 
   def update
@@ -54,16 +45,10 @@ class API::FileItemsController < ApplicationController
 
   def set_repository
     @repository = @current_user.repositories.find(params[:repository_id])
-  rescue ActiveRecord::RecordNotFound => e
-    LogUtils.log_warn(e, 'FileItemsController#set_repository')
-    render json: { message: 'Repository not found.' }, status: :not_found
   end
 
   def set_file_item
     repository = @repository || @current_user.repositories.find(params[:repository_id])
     @file_item = repository.file_items.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    LogUtils.log_warn(e, 'FileItemsController#set_file_item')
-    render json: { message: 'File not found.' }, status: :not_found
   end
 end

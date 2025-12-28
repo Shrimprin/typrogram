@@ -37,23 +37,11 @@ class API::RepositoriesController < ApplicationController
     else
       render json: { errors: repository.errors }, status: :unprocessable_content
     end
-  rescue Octokit::TooManyRequests => e
-    LogUtils.log_warn(e, 'RepositoriesController#create')
-    render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
-  rescue Octokit::Unauthorized => e
-    LogUtils.log_error(e, 'RepositoriesController#create')
-    render json: { message: 'Invalid access token.' }, status: :unauthorized
-  rescue StandardError => e
-    LogUtils.log_error(e, 'RepositoriesController#create')
-    render json: { message: 'An error occurred. Please try again later.' }, status: :internal_server_error
   end
 
   def destroy
     @repository.destroy_with_associations
     render json: { message: 'Repository deleted successfully.' }, status: :ok
-  rescue StandardError => e
-    LogUtils.log_error(e, 'RepositoriesController#destroy')
-    render json: { message: 'Failed to delete repository.' }, status: :internal_server_error
   end
 
   private
@@ -64,8 +52,5 @@ class API::RepositoriesController < ApplicationController
 
   def set_repository
     @repository = @current_user.repositories.find(params[:id])
-  rescue ActiveRecord::RecordNotFound => e
-    LogUtils.log_warn(e, 'RepositoriesController#set_repository')
-    render json: { message: 'Repository not found.' }, status: :not_found
   end
 end

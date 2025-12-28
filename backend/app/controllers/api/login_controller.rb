@@ -15,12 +15,5 @@ class API::LoginController < ApplicationController
       expires_at: expires_at.to_i,
       user_id: user.id
     }, status: :ok
-  rescue ActiveRecord::RecordInvalid => e
-    LogUtils.log_warn(e, 'LoginController#create')
-    render json: { message: 'Please provide valid user information.' }, status: :unprocessable_content
-  rescue StandardError => e
-    LogUtils.log_error(e, 'LoginController#create')
-    render json: { message: 'An error occurred during authentication. Please try again later.' },
-           status: :internal_server_error
   end
 end
