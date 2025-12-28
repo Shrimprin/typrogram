@@ -49,22 +49,26 @@ class FileItem < ApplicationRecord
   end
 
   def update_with_parent(params, is_timestamp: false)
+    is_success = false
     transaction do
-      is_updated = update_with_typing_progress(params, is_timestamp:) && update_parent_status
-      raise ActiveRecord::Rollback unless is_updated
-
-      true
+      is_success = update_with_typing_progress(params, is_timestamp:) && update_parent_status
+      raise ActiveRecord::Rollback unless is_success
     end
+
+    is_success
   end
 
   def update_with_typing_progress(params, is_timestamp: false)
+    is_success = false
     transaction do
-      is_updated = update(params.except(:typing_progress)) && save_typing_progress(params)
-      is_updated &&= repository.update(last_typed_at: Time.zone.now) if is_timestamp # touchはバリデーションを無視するためupdate
-      raise ActiveRecord::Rollback unless is_updated
+      is_success = update(params.except(:typing_progress)) && save_typing_progress(params)
+      is_success &&= repository.update(last_typed_at: Time.zone.now) if is_timestamp # touchはバリデーションを無視するためupdate
+      raise ActiveRecord::Rollback unless is_success
 
       true
     end
+
+    is_success
   end
 
   private

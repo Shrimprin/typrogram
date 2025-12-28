@@ -118,8 +118,8 @@ RSpec.describe Repository, type: :model do
         allow(repository).to receive(:save_file_items).with(github_client_mock).and_return(true)
       end
 
-      it 'returns nil' do
-        expect(repository.save_with_file_items(github_client_mock)).to be_nil
+      it 'returns false' do
+        expect(repository.save_with_file_items(github_client_mock)).to be false
       end
 
       it 'does not create a repository' do
@@ -135,8 +135,8 @@ RSpec.describe Repository, type: :model do
         allow(repository).to receive(:save_file_items).with(github_client_mock).and_return(false)
       end
 
-      it 'returns nil' do
-        expect(repository.save_with_file_items(github_client_mock)).to be_nil
+      it 'returns false' do
+        expect(repository.save_with_file_items(github_client_mock)).to be false
       end
 
       it 'rolls backs the transaction and does not create a repository' do

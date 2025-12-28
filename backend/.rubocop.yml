@@ -45,6 +45,10 @@ Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always
 
+# 真偽値を返すメソッド名が?意外で終わることを許可
+Naming/PredicateMethod:
+  Enabled: false
+
 # delegateは使用しない
 Rails/Delegate:
   Enabled: false

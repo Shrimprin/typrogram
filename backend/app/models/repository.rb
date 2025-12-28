@@ -26,12 +26,13 @@ class Repository < ApplicationRecord
   end
 
   def save_with_file_items(github_client)
+    is_success = false
     transaction do
-      is_saved = save && save_file_items(github_client)
-      raise ActiveRecord::Rollback unless is_saved
-
-      true
+      is_success = save && save_file_items(github_client)
+      raise ActiveRecord::Rollback unless is_success
     end
+
+    is_success
   end
 
   # dependent: :destroyはレコードを1つ1つ削除するため処理が遅い
