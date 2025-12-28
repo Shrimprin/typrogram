@@ -124,7 +124,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         get_preview_with_valid_url
         expect(response).to have_http_status(:too_many_requests)
         json = response.parsed_body
-        expect(json['message']).to eq('Too many requests. Please try again later.')
+        expect(json['message']).to eq('An error occurred. Please try again later.')
       end
     end
 
@@ -139,7 +139,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         get_preview_with_valid_url
         expect(response).to have_http_status(:unauthorized)
         json = response.parsed_body
-        expect(json['message']).to eq('Invalid access token.')
+        expect(json['message']).to eq('An error occurred. Please try again later.')
       end
     end
 

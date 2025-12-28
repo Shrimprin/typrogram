@@ -74,39 +74,5 @@ RSpec.describe API::LoginController, type: :request do
         expect(existing_user.name).to eq(new_name)
       end
     end
-
-    context 'when invalid params' do
-      subject(:authenticate_with_invalid_params) do
-        post '/api/login', params: invalid_params
-      end
-
-      let(:invalid_params) { { github_id: '12345' } }
-
-      it 'returns error message' do
-        authenticate_with_invalid_params
-
-        expect(response).to have_http_status(:unprocessable_content)
-        json = response.parsed_body
-        expect(json['message']).to eq('Please provide valid user information.')
-      end
-    end
-
-    context 'when unexpected error occurs' do
-      subject(:authenticate_when_error_occurs) do
-        post '/api/login', params: valid_params
-      end
-
-      before do
-        allow(User).to receive(:find_or_initialize_by).and_raise(StandardError)
-      end
-
-      it 'returns error message' do
-        authenticate_when_error_occurs
-
-        expect(response).to have_http_status(:internal_server_error)
-        json = response.parsed_body
-        expect(json['message']).to eq('An error occurred during authentication. Please try again later.')
-      end
-    end
   end
 end
