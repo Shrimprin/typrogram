@@ -1,9 +1,8 @@
-import axios from 'axios';
 import NextAuth from 'next-auth';
 import GitHub from 'next-auth/providers/github';
-import axiosCaseConverter from 'simple-axios-case-converter';
 
 import { setToast } from './actions/toast';
+import { axiosPost } from './utils/axios';
 
 declare module 'next-auth' {
   interface User {
@@ -40,11 +39,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async signIn({ user, account, profile }) {
       const name = profile?.name || profile?.login;
       const githubId = account?.providerAccountId;
-      const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`;
+      const url = `/api/login`;
       const params = { name, githubId };
       try {
-        axiosCaseConverter(axios);
-        const response = await axios.post(url, params);
+        const response = await axiosPost(url, undefined, params);
         if (response.status === 200) {
           user.accessToken = response.data.accessToken;
           user.tokenExpiresAt = response.data.expiresAt;
