@@ -21,6 +21,8 @@ class FileItem < ApplicationRecord
     unsupported: 3
   }
 
+  NON_ASCII_REGEXP = /[^\x00-\x7F]/
+
   def full_path
     "#{repository.name}/#{path}"
   end
@@ -104,7 +106,7 @@ class FileItem < ApplicationRecord
     return false if file_content.blank?
 
     # ASCII文字以外（英数字、記号、空白文字以外）が含まれているかチェック
-    file_content.match?(/[^\x00-\x7F]/)
+    file_content.match?(NON_ASCII_REGEXP)
   end
 
   def decode_file_content(file_content)
