@@ -50,21 +50,8 @@ RSpec.describe API::UsersController, type: :request do
       expect(json['message']).to eq('Account has been successfully deleted.')
     end
 
-    describe 'error handling' do
-      it 'returns unprocessable_content when ActiveRecord::RecordNotDestroyed is raised' do
-        # @current_user.destroy_with_associationsがエラーを返すようにモック
-        allow(User).to receive(:find_by).with(id: user.id).and_return(user)
-        allow(user).to receive(:destroy_with_associations).and_raise(ActiveRecord::RecordNotDestroyed)
-
-        delete_user
-
-        expect(response).to have_http_status(:unprocessable_content)
-
-        json = response.parsed_body
-        expect(json['message']).to eq('Failed to delete account.')
-      end
-
-      it 'returns internal_server_error when StandardError is raised' do
+    describe 'when unexpected error occurs' do
+      it 'returns internal_server_error' do
         # @current_user.destroy_with_associationsがエラーを返すようにモック
         allow(User).to receive(:find_by).with(id: user.id).and_return(user)
         allow(user).to receive(:destroy_with_associations).and_raise(StandardError)

@@ -9,7 +9,6 @@ class ApplicationController < ActionController::API
   rescue_from Octokit::TooManyRequests, with: :handle_too_many_requests
   rescue_from Octokit::Unauthorized, with: :handle_unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
-  rescue_from ActiveRecord::RecordNotDestroyed, with: :handle_record_not_destroyed
 
   private
 
@@ -45,10 +44,5 @@ class ApplicationController < ActionController::API
 
   def handle_record_not_found(_exception)
     render json: { message: 'Resource not found.' }, status: :not_found
-  end
-
-  def handle_record_not_destroyed(exception)
-    logger.error exception.full_message
-    render json: { message: 'Failed to delete account.' }, status: :unprocessable_content
   end
 end
