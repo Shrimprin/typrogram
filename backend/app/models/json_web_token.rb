@@ -10,9 +10,8 @@ class JsonWebToken
     def decode(token)
       decoded = JWT.decode(token, Rails.application.credentials.secret_key_base)[0]
       ActiveSupport::HashWithIndifferentAccess.new(decoded)
-    rescue JWT::DecodeError => e
+    rescue JWT::DecodeError
       # トークンの有効切れの際はnilを返す
-      Rails.logger.error e.full_message
       nil
     end
   end
