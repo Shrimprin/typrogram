@@ -117,7 +117,9 @@ class FileItem < ApplicationRecord
       decoded_file_content = decoded_file_content.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
     end
 
-    # nullバイトを削除
+    # nullバイトを削除（PostgreSQLの文字列型は保存不可のため）
+    # 主にバイナリファイル（画像、フォント、実行ファイルなど）に含まれるためタイピング対象になることは少なそうだが、
+    # 全てのバイナリファイルの拡張子をアプリ側で制限することは難しいため、nullバイトを削除することで対処する
     decoded_file_content.delete("\0")
   end
 end
