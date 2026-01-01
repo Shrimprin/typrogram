@@ -30,17 +30,17 @@ class ApplicationController < ActionController::API
   end
 
   # GitHubAPIのリミットレートは1つのアクセストークンにつき5000回/時間
-  # これは全ユーザで共通（ユーザAが5000回リクエストするとユーザBはリクエストできない）ため、システムエラーとする
+  # これは全ユーザで共通（ユーザAが5000回リクエストするとユーザBはリクエストできない）
   # https://docs.github.com/ja/rest/using-the-rest-api/rate-limits-for-the-rest-api
   def handle_too_many_requests(exception)
     logger.error exception.full_message
-    render json: { message: 'An error occurred. Please try again later.' }, status: :too_many_requests
+    render json: { message: 'Too many requests. Please try again later.' }, status: :too_many_requests
   end
 
-  #  管理者側で設定するアクセストークンの有効期限が切れている場合はシステムエラーとする
+  # 管理者側で設定するアクセストークンの有効期限が切れている場合
   def handle_unauthorized(exception)
     logger.error exception.full_message
-    render json: { message: 'An error occurred. Please try again later.' }, status: :unauthorized
+    render json: { message: 'Invalid access token.' }, status: :unauthorized
   end
 
   def handle_record_not_found(_exception)
