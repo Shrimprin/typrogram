@@ -118,8 +118,8 @@ RSpec.describe Repository, type: :model do
         allow(repository).to receive(:save_file_items).with(github_client_mock).and_return(true)
       end
 
-      it 'returns nil' do
-        expect(repository.save_with_file_items(github_client_mock)).to be_nil
+      it 'returns false' do
+        expect(repository.save_with_file_items(github_client_mock)).to be false
       end
 
       it 'does not create a repository' do
@@ -135,8 +135,8 @@ RSpec.describe Repository, type: :model do
         allow(repository).to receive(:save_file_items).with(github_client_mock).and_return(false)
       end
 
-      it 'returns nil' do
-        expect(repository.save_with_file_items(github_client_mock)).to be_nil
+      it 'returns false' do
+        expect(repository.save_with_file_items(github_client_mock)).to be false
       end
 
       it 'rolls backs the transaction and does not create a repository' do
@@ -200,18 +200,23 @@ RSpec.describe Repository, type: :model do
         node_class.new(path: 'inactive_directory/inactive_file.md', type: 'blob')
       ]
     end
-    let(:github_client_mock) { instance_double(Octokit::Client) }
+    let(:github_client) { GithubClient.new }
+    let(:octokit_client_mock) { instance_double(Octokit::Client) }
+    let(:commit) { double('commit', sha: repository.commit_hash) }
     let(:tree_response) { double('tree_response', tree: file_tree) }
 
     before do
-      allow(github_client_mock).to receive(:tree)
+      allow(ENV).to receive(:fetch).with('GITHUB_ACCESS_TOKEN').and_return('github_access_token')
+      allow(Octokit::Client).to receive(:new).and_return(octokit_client_mock)
+      allow(octokit_client_mock).to receive(:commits).with(repository.url).and_return([commit])
+      allow(octokit_client_mock).to receive(:tree)
         .with(repository.url, repository.commit_hash, recursive: true)
         .and_return(tree_response)
     end
 
     it 'saves file_items with tree structure' do
       expect(repository.file_items.count).to be_zero
-      repository.send(:save_file_items, github_client_mock)
+      repository.send(:save_file_items, github_client)
 
       expect(repository.file_items.count).to eq(6)
       expect(repository.file_items.where(type: 'file').count).to eq(4)
@@ -234,7 +239,7 @@ RSpec.describe Repository, type: :model do
 
     it 'does not save file_items with inactive extensions' do
       expect(repository.extensions.find_by(name: '.md').is_active).to be false
-      repository.send(:save_file_items, github_client_mock)
+      repository.send(:save_file_items, github_client)
 
       inactive_directory = repository.file_items.find_by(path: 'inactive_directory')
       expect(inactive_directory).to be_nil

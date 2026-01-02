@@ -131,7 +131,7 @@ RSpec.describe API::RepositoriesController, type: :request do
 
         expect(response).to have_http_status(:not_found)
         json = response.parsed_body
-        expect(json['message']).to eq('Repository not found.')
+        expect(json['message']).to eq('Resource not found.')
       end
     end
   end
@@ -162,6 +162,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_return(true)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_return(repository_info)
         allow(github_client_mock).to receive(:commits).with(valid_repository_url).and_return([commit])
 
@@ -208,6 +209,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_return(true)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_return(repository_info)
         allow(github_client_mock).to receive(:commits).with(valid_repository_url).and_return([commit])
       end
@@ -243,7 +245,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(non_existent_repository_url).and_raise(Octokit::NotFound)
+        allow(github_client_mock).to receive(:repository?).with(non_existent_repository_url).and_return(false)
       end
 
       it 'returns not found status' do
@@ -258,7 +260,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::TooManyRequests)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(Octokit::TooManyRequests)
       end
 
       it 'returns too_many_requests status' do
@@ -273,7 +275,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::Unauthorized)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(Octokit::Unauthorized)
       end
 
       it 'returns unauthorized status' do
@@ -288,7 +290,7 @@ RSpec.describe API::RepositoriesController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(StandardError)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(StandardError)
       end
 
       it 'returns internal_server_error status' do
@@ -348,7 +350,7 @@ RSpec.describe API::RepositoriesController, type: :request do
 
         expect(response).to have_http_status(:not_found)
         json = response.parsed_body
-        expect(json['message']).to eq('Repository not found.')
+        expect(json['message']).to eq('Resource not found.')
       end
     end
 
@@ -365,7 +367,7 @@ RSpec.describe API::RepositoriesController, type: :request do
 
         expect(response).to have_http_status(:internal_server_error)
         json = response.parsed_body
-        expect(json['message']).to eq('Failed to delete repository.')
+        expect(json['message']).to eq('An error occurred. Please try again later.')
       end
 
       it 'does not delete the repository' do

@@ -25,15 +25,18 @@ class Repository < ApplicationRecord
     end
   end
 
-  def save_with_file_items(client)
+  def save_with_file_items(github_client)
+    is_success = false
     transaction do
-      is_saved = save && save_file_items(client)
-      raise ActiveRecord::Rollback unless is_saved
-
-      true
+      is_success = save && save_file_items(github_client)
+      raise ActiveRecord::Rollback unless is_success
     end
+
+    is_success
   end
 
+  # dependent: :destroyはレコードを1つ1つ削除するため処理が遅い
+  # 一括でレコードを削除するために自前のメソッドを用意
   def destroy_with_associations
     transaction do
       delete_associated_records
@@ -43,8 +46,8 @@ class Repository < ApplicationRecord
 
   private
 
-  def save_file_items(client)
-    file_tree_data = client.tree(url, commit_hash, recursive: true)
+  def save_file_items(github_client)
+    file_tree_data = github_client.file_tree(url)
     file_tree_grouped_by_depth = file_tree_data.tree.group_by { |node| depth_of(node.path) }
     filtered_file_tree = filter_file_tree_by_valid_extensions(file_tree_grouped_by_depth)
     create_file_items_recursively(filtered_file_tree)
@@ -92,8 +95,7 @@ class Repository < ApplicationRecord
 
   def build_file_items(nodes, parent_file_item)
     nodes.map do |node|
-      FileItem.new(
-        repository: self,
+      file_items.build(
         parent: parent_file_item,
         name: File.basename(node.path),
         path: node.path,

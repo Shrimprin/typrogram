@@ -38,6 +38,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_return(true)
         allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_return(repository_info)
         allow(github_client_mock).to receive(:commits).with(valid_repository_url).and_return([commit])
 
@@ -55,7 +56,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
         get_preview_with_valid_url
         json = response.parsed_body
         expect(json['name']).to eq('repository')
-        expect(json['url']).to eq(valid_url)
+        expect(json['url']).to eq('username/repository')
       end
 
       it 'returns extensions order by file count and name' do
@@ -101,7 +102,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(non_existent_repository_url).and_raise(Octokit::NotFound)
+        allow(github_client_mock).to receive(:repository?).with(non_existent_repository_url).and_return(false)
       end
 
       it 'returns not found status' do
@@ -116,7 +117,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::TooManyRequests)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(Octokit::TooManyRequests)
       end
 
       it 'returns too_many_requests status' do
@@ -131,7 +132,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(Octokit::Unauthorized)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(Octokit::Unauthorized)
       end
 
       it 'returns unauthorized status' do
@@ -146,7 +147,7 @@ RSpec.describe API::Repositories::PreviewsController, type: :request do
       before do
         github_client_mock = instance_double(Octokit::Client)
         allow(Octokit::Client).to receive(:new).and_return(github_client_mock)
-        allow(github_client_mock).to receive(:repository).with(valid_repository_url).and_raise(StandardError)
+        allow(github_client_mock).to receive(:repository?).with(valid_repository_url).and_raise(StandardError)
       end
 
       it 'returns internal_server_error status' do
