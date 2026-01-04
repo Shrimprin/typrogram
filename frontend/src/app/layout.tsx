@@ -10,7 +10,7 @@ import './globals.css';
 const TITLE = 'Typrogram';
 const DESCRIPTION =
   'Free typing game for programmers. You can import any GitHub repository and practice typing through real code.';
-const BASE_URL = 'https://www.Typrogram.com';
+const BASE_URL = 'https://typrogram.com';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
