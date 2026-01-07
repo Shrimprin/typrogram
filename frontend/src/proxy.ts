@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { auth } from './auth';
 
-function middleware(request: NextRequest) {
+function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const isDev = process.env.NODE_ENV === 'development';
 
@@ -37,7 +37,7 @@ function middleware(request: NextRequest) {
 }
 
 // Auth.jsのcallbacks.authorizedで認証チェックを行うため、middlewareをauthでラップする
-export default auth(middleware);
+export default auth(proxy);
 
 export const config = {
   matcher: [
