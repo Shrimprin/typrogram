@@ -9,9 +9,9 @@ RSpec.describe API::UsersController, type: :request do
   let(:token) { JsonWebToken.encode(user.id, 30.days.from_now) }
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
-  describe 'DELETE /api/users/:id' do
+  describe 'DELETE /api/users' do
     subject(:delete_user) do
-      delete "/api/users/#{user.id}", headers: headers
+      delete '/api/users', headers: headers
     end
 
     it 'deletes the user and all associated records' do
@@ -50,24 +50,11 @@ RSpec.describe API::UsersController, type: :request do
       expect(json['message']).to eq('Account has been successfully deleted.')
     end
 
-    describe 'error handling' do
-      it 'returns unprocessable_content when ActiveRecord::RecordNotDestroyed is raised' do
-        # @current_user.destroy!がエラーを返すようにモック
-        allow(User).to receive(:find).with(user.id).and_return(user)
-        allow(user).to receive(:destroy!).and_raise(ActiveRecord::RecordNotDestroyed)
-
-        delete_user
-
-        expect(response).to have_http_status(:unprocessable_content)
-
-        json = response.parsed_body
-        expect(json['message']).to eq('Failed to delete account.')
-      end
-
-      it 'returns internal_server_error when StandardError is raised' do
-        # @current_user.destroy!がエラーを返すようにモック
-        allow(User).to receive(:find).with(user.id).and_return(user)
-        allow(user).to receive(:destroy!).and_raise(StandardError)
+    describe 'when unexpected error occurs' do
+      it 'returns internal_server_error' do
+        # @current_user.destroy_with_associationsがエラーを返すようにモック
+        allow(User).to receive(:find_by).with(id: user.id).and_return(user)
+        allow(user).to receive(:destroy_with_associations).and_raise(StandardError)
 
         delete_user
 
@@ -75,17 +62,6 @@ RSpec.describe API::UsersController, type: :request do
 
         json = response.parsed_body
         expect(json['message']).to eq('An error occurred. Please try again later.')
-      end
-
-      it 'returns forbidden error when trying to delete another user' do
-        other_user = create(:user)
-
-        delete "/api/users/#{other_user.id}", headers: headers
-
-        expect(response).to have_http_status(:forbidden)
-
-        json = response.parsed_body
-        expect(json['message']).to eq('Unauthorized access.')
       end
     end
   end

@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
-  post '/api/auth/callback/github', to: 'api/auth#login'
-
   namespace :api do
-    resources :users, only: [:destroy]
-    get '/repositories/preview', to: 'repositories/previews#show'
+    resource :login, only: [:create], controller: 'login'
+    resource :users, only: [:destroy]
+    namespace :repositories do
+      resource :preview, only: [:show]
+    end
     resources :repositories, only: [:index, :show, :create, :destroy] do
       resources :file_items, only: [:show, :update]
     end

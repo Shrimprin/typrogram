@@ -8,23 +8,25 @@ class TypingProgress < ApplicationRecord
             presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   def save_with_typos(typos_params)
+    is_success = false
     transaction do
-      is_saved = save && save_typos(typos_params)
-      raise ActiveRecord::Rollback unless is_saved
-
-      true
+      is_success = save && save_typos(typos_params)
+      raise ActiveRecord::Rollback unless is_success
     end
+
+    is_success
   end
 
   def update_with_typos(typing_progress_params, typos_params)
+    is_success = false
     transaction do
       typos.delete_all if typos.exists?
 
-      is_updated = update(typing_progress_params) && save_typos(typos_params)
-      raise ActiveRecord::Rollback unless is_updated
-
-      true
+      is_success = update(typing_progress_params) && save_typos(typos_params)
+      raise ActiveRecord::Rollback unless is_success
     end
+
+    is_success
   end
 
   def self.delete_by_repository(repository_ids)
@@ -48,7 +50,7 @@ class TypingProgress < ApplicationRecord
     return true unless failed_typos.any?
 
     add_typo_errors(failed_typos)
-    nil
+    false
   end
 
   def add_typo_errors(failed_typos)
