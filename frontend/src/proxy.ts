@@ -10,7 +10,7 @@ function proxy(request: NextRequest) {
   const cspHeader = `
     default-src 'self';
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${isDev ? "'unsafe-eval'" : ''};
-    style-src 'self' ${isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`};
+    style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://avatars.githubusercontent.com;
     font-src 'self';
     connect-src 'self' ${process.env.NEXT_PUBLIC_BACKEND_URL || ''};
